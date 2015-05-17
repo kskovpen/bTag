@@ -1,0 +1,4 @@
+ Edit CondFormats/JetMETObjects/interface/JetCorrectorParameters.h and
+CondFormats/JetMETObjects/interface/JetResolution.h: you need to
+comment out the line
+#include "FWCore/Utilities/interface/Exception.h"
