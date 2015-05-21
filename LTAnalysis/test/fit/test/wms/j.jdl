@@ -1,0 +1,8 @@
+Executable = "/bin/sh";
+Arguments = "wmsjob.sh runmode sysidx transfer0 analysis anaName runName voName";
+StdOutput = "stdout.out";
+StdError = "stderr.err";
+InputSandbox={"wmsjob.sh","code.tar.gz","plotFit.sh"};
+OutputSandbox = { "stdout.out", "stderr.err" };
+#Requirements=other.GlueCEUniqueID=="sbgce2.in2p3.fr:8443/cream-pbs-cms"
+Requirements=other.GlueCEUniqueID=="sbgce2.in2p3.fr:8443/cream-pbs-vo.sbg.in2p3.fr"

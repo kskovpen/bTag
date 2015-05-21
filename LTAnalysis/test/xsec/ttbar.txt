@@ -1,0 +1,6 @@
+TTJets-v1               6923740      227      1.
+T_tW-channel-v1         497657       11.2     1.
+Tbar_tW-channel-v1      493458       11.2     1.
+DYJetsToLL_M10to50-v1   7132199      860.5    1.
+DYJetsToLL_Msup50-v1    30459500     3532.8   1.
+
