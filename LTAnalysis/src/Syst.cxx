@@ -11,6 +11,36 @@ LTANA::Syst::~Syst()
 void LTANA::Syst::init()
 {   
    helper = new Helper();
+
+   _sysNameDown[0]  = "";
+   _sysNameDown[1]  = "_pu_down";
+   _sysNameDown[2]  = "_gsplit_down";
+   _sysNameDown[3]  = "_bfrag_down";
+   _sysNameDown[4]  = "_cdfrag_down";
+   _sysNameDown[5]  = "_cfrag_down";
+   _sysNameDown[6]  = "_ksl_down";
+   _sysNameDown[7]  = "_ntrkgen_down";
+   _sysNameDown[8]  = "_jes_down";
+   _sysNameDown[9]  = "_jer_down";
+   _sysNameDown[10] = "_ntrk_down";
+   _sysNameDown[11] = "_njet_down";
+   _sysNameDown[12] = "_mupt_down";
+   _sysNameDown[13] = "_jeta_down";
+
+   _sysNameUp[0]  = "";
+   _sysNameUp[1]  = "_pu_up";
+   _sysNameUp[2]  = "_gsplit_up";
+   _sysNameUp[3]  = "_bfrag_up";
+   _sysNameUp[4]  = "_cdfrag_up";
+   _sysNameUp[5]  = "_cfrag_up";
+   _sysNameUp[6]  = "_ksl_up";
+   _sysNameUp[7]  = "_ntrkgen_up";
+   _sysNameUp[8]  = "_jes_up";
+   _sysNameUp[9]  = "_jer_up";
+   _sysNameUp[10] = "_ntrk_up";
+   _sysNameUp[11] = "_njet_up";
+   _sysNameUp[12] = "_mupt_up";
+   _sysNameUp[13] = "_jeta_up";
    
    jesTotal = new JetCorrectionUncertainty(*(new JetCorrectorParameters("/home-pbs/kskovpen/bTag/CMSSW_7_4_0/src/LTAnalysis/test/Summer13_V5_DATA_UncertaintySources_AK5PF.txt", "Total")));
 
@@ -82,9 +112,9 @@ void LTANA::Syst::JEC(int ij)
 {	
    _v_jet = new TLorentzVector(0,0,0,0);
    _v_jet_sys_jesTotalUp = new TLorentzVector(0,0,0,0);
-   _v_jet_sys_jesTotalLow = new TLorentzVector(0,0,0,0);
+   _v_jet_sys_jesTotalDown = new TLorentzVector(0,0,0,0);
    _v_jet_sys_jerTotalUp = new TLorentzVector(0,0,0,0);
-   _v_jet_sys_jerTotalLow = new TLorentzVector(0,0,0,0);
+   _v_jet_sys_jerTotalDown = new TLorentzVector(0,0,0,0);
 	
    float jeta = ntP->Jet_eta[ij];
    float jphi = ntP->Jet_phi[ij];
@@ -96,7 +126,7 @@ void LTANA::Syst::JEC(int ij)
    // JER
 
    _v_jet_sys_jerTotalUp->SetPtEtaPhiM(jpt,jeta,jphi,jm);
-   _v_jet_sys_jerTotalLow->SetPtEtaPhiM(jpt,jeta,jphi,jm);
+   _v_jet_sys_jerTotalDown->SetPtEtaPhiM(jpt,jeta,jphi,jm);
 	
    if( !isdata )
      {	    
@@ -123,7 +153,7 @@ void LTANA::Syst::JEC(int ij)
 		  if( jpt_c_up < 0. ) jpt_c_up = 0.;
 		  
 		  _v_jet_sys_jerTotalUp->SetPtEtaPhiM(jpt_c_up,jeta,jphi,jm);
-		  _v_jet_sys_jerTotalLow->SetPtEtaPhiM(jpt_c_down,jeta,jphi,jm);
+		  _v_jet_sys_jerTotalDown->SetPtEtaPhiM(jpt_c_down,jeta,jphi,jm);
 	       }
 	  }	     
 	
@@ -133,7 +163,7 @@ void LTANA::Syst::JEC(int ij)
    _v_jet->SetPtEtaPhiM(jpt,jeta,jphi,jm);
 	
    _v_jet_sys_jesTotalUp->SetPtEtaPhiM(jpt,jeta,jphi,jm);
-   _v_jet_sys_jesTotalLow->SetPtEtaPhiM(jpt,jeta,jphi,jm);
+   _v_jet_sys_jesTotalDown->SetPtEtaPhiM(jpt,jeta,jphi,jm);
 
    // JES
    jesTotal->setJetPt(jpt);
@@ -145,20 +175,20 @@ void LTANA::Syst::JEC(int ij)
 				       _v_jet->Phi(),
 				       _v_jet->E()*(1.+uncert));
    
-   _v_jet_sys_jesTotalLow->SetPtEtaPhiE(jpt*(1.-uncert),
-					jeta,
-					_v_jet->Phi(),
-					_v_jet->E()*(1.-uncert));
+   _v_jet_sys_jesTotalDown->SetPtEtaPhiE(jpt*(1.-uncert),
+					 jeta,
+					 _v_jet->Phi(),
+					 _v_jet->E()*(1.-uncert));
    
 }
 
 // pileup reweighting sys
-float LTANA::Syst::Pileup(int npu,std::string sysName)
+float LTANA::Syst::Pileup(int npu,int isys)
 {	
    float sf = 1.;
    float wPU = WeightPU[npu];
-   bool isUp = (strcmp(sysName.c_str(),"_pu_up") == 0);
-   bool isDown = (strcmp(sysName.c_str(),"_pu_low") == 0);
+   bool isUp = (isys == SYS_PU_UP);
+   bool isDown = (isys == SYS_PU_DOWN);
    if( isUp || isDown )
      {	
 	if( isUp ) wPU = WeightPUmax[npu];
@@ -171,12 +201,12 @@ float LTANA::Syst::Pileup(int npu,std::string sysName)
 }
 
 // gluon splitting sys
-float LTANA::Syst::GluonSplitting(int ij,int flavch,std::string sysName)
+float LTANA::Syst::GluonSplitting(int ij,int flavch,int isys)
 {
    float sf = 1.;
    
-   if( (strcmp(sysName.c_str(),"_gsplit_low") == 0 || 
-	strcmp(sysName.c_str(),"_gsplit_up") == 0) &&
+   if( (isys == SYS_GSPLIT_DOWN || 
+	isys == SYS_GSPLIT_UP) &&
        !isdata )
      {		       
 	bool GSPc = false, GSPb = false;
@@ -230,11 +260,11 @@ float LTANA::Syst::GluonSplitting(int ij,int flavch,std::string sysName)
 	  }		  
 	
 	if( 
-	   strcmp(sysName.c_str(),"_gsplit_low") == 0 &&
+	   isys == SYS_GSPLIT_DOWN &&
 	   ((GSPc && flavch == 2) || (GSPb && flavch == 1))
 	  ) sf *= 0.5;
 	if( 
-	   strcmp(sysName.c_str(),"_gsplit_up") == 0 &&
+	   isys == SYS_GSPLIT_UP &&
 	   ((GSPc && flavch == 2) || (GSPb && flavch == 1))
 	  ) sf *= 1.5;
      }
@@ -243,12 +273,12 @@ float LTANA::Syst::GluonSplitting(int ij,int flavch,std::string sysName)
 }
 
 // b fragmentation sys
-float LTANA::Syst::bFrag(int ij,int flavch,std::string sysName)
+float LTANA::Syst::bFrag(int ij,int flavch,int isys)
 {
    float sf = 1.;
    
-   if( (strcmp(sysName.c_str(),"_bfrag_low") == 0 ||
-	strcmp(sysName.c_str(),"_bfrag_up") == 0) &&
+   if( (isys == SYS_BFRAG_DOWN ||
+	isys == SYS_BFRAG_UP) &&
        !isdata )
      {		 
 	float jPT = ntP->Jet_pt[ij];
@@ -256,8 +286,8 @@ float LTANA::Syst::bFrag(int ij,int flavch,std::string sysName)
 	float EnergyFraction = 0.; 
 	int iB = -1, iptBin = 0, efbin = -1;
 	if( flavch == 1 && 
-	    ( strcmp(sysName.c_str(),"_bfrag_low") == 0 || 
-	      strcmp(sysName.c_str(),"_bfrag_up") == 0 ) )
+	    ( isys == SYS_BFRAG_DOWN ||
+	      isys == SYS_BFRAG_UP ) )
 	  {
 	     if( jPT > 500 ) iptBin = 14;
 	     else if( jPT > 400 ) iptBin = 13;
@@ -297,8 +327,8 @@ float LTANA::Syst::bFrag(int ij,int flavch,std::string sysName)
 		  efbin = int( EnergyFraction / 0.02 );
 		  if( efbin >= 0 && efbin < 100 ) 
 		    {
-		       if( strcmp(sysName.c_str(),"_bfrag_low") == 0 ) WeightBFrag = BTemplateCorrections[efbin][iptBin][0];
-		       if( strcmp(sysName.c_str(),"_bfrag_up") == 0 ) WeightBFrag = BTemplateCorrections[efbin][iptBin][1];
+		       if( isys == SYS_BFRAG_DOWN ) WeightBFrag = BTemplateCorrections[efbin][iptBin][0];
+		       if( isys == SYS_BFRAG_UP ) WeightBFrag = BTemplateCorrections[efbin][iptBin][1];
 		    }			    
 	       }
 			    
@@ -310,12 +340,12 @@ float LTANA::Syst::bFrag(int ij,int flavch,std::string sysName)
 }
 
 // c->D fragmentation sys
-float LTANA::Syst::cdFrag(int ij,int flavch,std::string sysName)
+float LTANA::Syst::cdFrag(int ij,int flavch,int isys)
 {	
    float sf = 1.;
    
-   if( (strcmp(sysName.c_str(),"_cdfrag_low") == 0 || 
-	strcmp(sysName.c_str(),"_cdfrag_up") == 0) &&
+   if( (isys == SYS_CDFRAG_DOWN ||
+	isys == SYS_CDFRAG_UP) &&
        !isdata )
      {		       
 	if( flavch == 2 ||
@@ -347,7 +377,7 @@ float LTANA::Syst::cdFrag(int ij,int flavch,std::string sysName)
 	       }
 	     
 	     // weight for D->mu decay: Pythia vs PDG2013
-	     if( strcmp(sysName.c_str(),"_cdfrag_low") == 0 )
+	     if( isys == SYS_CDFRAG_DOWN )
 	       {			    
 		  if( isDplusMu ) sf *= 0.176 / 0.172;
 		  if( isDzeroMu ) sf *= 0.067 / 0.077;
@@ -360,7 +390,7 @@ float LTANA::Syst::cdFrag(int ij,int flavch,std::string sysName)
 }
 
 // c fragmentation sys
-float LTANA::Syst::cFrag(int ij,int flavch,std::string sysName)
+float LTANA::Syst::cFrag(int ij,int flavch,int isys)
 {
    float sf = 1.;
    
@@ -402,7 +432,7 @@ float LTANA::Syst::cFrag(int ij,int flavch,std::string sysName)
 		    }		       
 		  
 		  // weight for c->D fragmentation rate: Pythia vs PDG2008
-		  if( strcmp(sysName.c_str(),"_cfrag_low") == 0 )
+		  if( isys == SYS_CFRAG_DOWN )
 		    {
 		       // DB
 		       if( isDplus ) sf *= 1.37; // PDG2008(0.246+-0.020)
@@ -418,12 +448,12 @@ float LTANA::Syst::cFrag(int ij,int flavch,std::string sysName)
 }
 
 // K0s Lambda sys
-float LTANA::Syst::Ks(int ij,int flavch,std::string sysName)
+float LTANA::Syst::Ks(int ij,int flavch,int isys)
 {	
    float sf = 1.;
    
-   if( (strcmp(sysName.c_str(),"_ksl_low") == 0 || 
-	strcmp(sysName.c_str(),"_ksl_up") == 0) &&
+   if( (isys == SYS_KSL_DOWN ||
+	isys == SYS_KSL_UP) &&
        !isdata )
      {		       
 	int nK0s = 0, nLambda = 0;
@@ -440,7 +470,7 @@ float LTANA::Syst::Ks(int ij,int flavch,std::string sysName)
 		  if( pdgid == 310 )  nK0s++;
 		  if( pdgid == 3122 ) nLambda++;
 	       }
-	     if( strcmp(sysName.c_str(),"_ksl_up") == 0 )
+	     if( isys == SYS_KSL_UP )
 	       {			    
 		  if( nK0s > 0 )    sf *= 1.3;
 		  if( nLambda > 0 ) sf *= 1.5;
@@ -452,7 +482,7 @@ float LTANA::Syst::Ks(int ij,int flavch,std::string sysName)
 }
 
 // generated ntrk in b- and c- hadron decays sys
-float LTANA::Syst::GenNTrk(int ij,int flavch,std::string sysName)
+float LTANA::Syst::GenNTrk(int ij,int flavch,int isys)
 {	
    float sf = 1.;
    
@@ -519,7 +549,7 @@ float LTANA::Syst::GenNTrk(int ij,int flavch,std::string sysName)
 	if( nchgen1_c > 19 ) nchgen1_c = 19;
 	if( nchgen2_c > 19 ) nchgen2_c = 19;
 	
-	if( strcmp(sysName.c_str(),"_ntrkgen_low") == 0 )
+	if( isys == SYS_NTRKGEN_DOWN )
 	  {
 	     if( flavch == 2 )
 	       {
@@ -532,7 +562,7 @@ float LTANA::Syst::GenNTrk(int ij,int flavch,std::string sysName)
 		  if( nchgen2_b >= 0 ) sf *= WeightBtrkMin[nchgen2_b];
 	       }
 	  }
-	if( strcmp(sysName.c_str(),"_ntrkgen_up") == 0 )
+	if( isys == SYS_NTRKGEN_UP )
 	  {
 	     if( flavch == 2 )
 	       {			    
@@ -663,7 +693,7 @@ void LTANA::Syst::clear()
 {
    delete _v_jet;
    delete _v_jet_sys_jesTotalUp;
-   delete _v_jet_sys_jesTotalLow;
+   delete _v_jet_sys_jesTotalDown;
    delete _v_jet_sys_jerTotalUp;
-   delete _v_jet_sys_jerTotalLow;
+   delete _v_jet_sys_jerTotalDown;
 }

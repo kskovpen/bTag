@@ -25,18 +25,32 @@ void LTANA::Hist::init()
 
    int nbins = 100;
 
-   histname_jet_n = 8;
+   histNameDefined_jet[0] = "h_j1_pt_";
+   histNameDefined_jet[1] = "h_j1_nseltrk_";
+   histNameDefined_jet[2] = "h_j1_eta_";
+   histNameDefined_jet[3] = "h_j1_ntrk_";
+   histNameDefined_jet[4] = "h_j1_njet_";
+   histNameDefined_jet[5] = "h_j1_nsv_";
+   histNameDefined_jet[6] = "h_j1_mupt_";
+   histNameDefined_jet[7] = "h_j1_JP_";
 
-   histname_jet[0] = "h_j1_pt_";
-   histname_jet[1] = "h_j1_nseltrk_";
-   histname_jet[2] = "h_j1_eta_";
-   histname_jet[3] = "h_j1_ntrk_";
-   histname_jet[4] = "h_j1_njet_";
-   histname_jet[5] = "h_j1_nsv_";
-   histname_jet[6] = "h_j1_mupt_"; // has to be the last*/
-   histname_jet[7] = "h_j1_JP_";
-//   histname_jet[1] = "h_j1_JP_";
+   hist_jet.push_back(HIST_J1_PT);
+   hist_jet.push_back(HIST_J1_NSELTRK);
+   hist_jet.push_back(HIST_J1_ETA);
+   hist_jet.push_back(HIST_J1_NTRK);
+   hist_jet.push_back(HIST_J1_NJET);
+   hist_jet.push_back(HIST_J1_NSV);
+   hist_jet.push_back(HIST_J1_MUPT);
+   hist_jet.push_back(HIST_J1_JP);
+   
+   hist_jet_n = hist_jet.size();
 
+   for(int ih=0;ih<hist_jet_n;ih++)
+     {
+	int idx = hist_jet[ih];
+	histName_jet[ih] = histNameDefined_jet[idx];
+     }   
+   
    sel.push_back("nosel");
    sel.push_back("pt20t30");
    sel.push_back("pt30t40");
@@ -76,16 +90,31 @@ void LTANA::Hist::init()
    eta_n = 1;
    eta[0] = "nosel";
 
-   selb.push_back("nosel");
-   selb.push_back("combSvx0p244"); // Loose
-//   selb[2] = "combSvx0p679"; // Medium
-//   selb[3] = "combSvx0p898"; // Tight
-//   selb[4] = "TCHP1p19"; // Loose
-//   selb[5] = "TCHP1p93"; // Medium
-//   selb[6] = "TCHP3p41"; // Tight
-   selb.push_back("UNTAGbc");
+   selbNameDefined[0] = "nosel";
+   selbNameDefined[1] = "combSvx0p244";
+   selbNameDefined[2] = "combSvx0p679";
+   selbNameDefined[3] = "combSvx0p898";
+   selbNameDefined[4] = "TCHP1p19";
+   selbNameDefined[5] = "TCHP1p93";
+   selbNameDefined[6] = "TCHP3p41";
+   selbNameDefined[7] = "UNTAGbc";
+   
+   selb.push_back(BTAG_NONE);
+   selb.push_back(BTAG_CSVL);
+   selb.push_back(BTAG_CSVM);
+   selb.push_back(BTAG_CSVT);
+//   selb.push_back(BTAG_TCHPL);
+//   selb.push_back(BTAG_TCHPM);
+   selb.push_back(BTAG_TCHPT);
+   selb.push_back(BTAG_UNTAG);
    selb_n = selb.size();
 
+   for(int isb=0;isb<selb_n;isb++)
+     {
+	int idx = selb[isb];
+	selbName.push_back(selbNameDefined[idx]);
+     }   
+   
    seladd_n = 1;
    seladd[0] = "";
    
@@ -94,40 +123,46 @@ void LTANA::Hist::init()
    flav[1] = "bjet";
    flav[2] = "cjet";
    flav[3] = "ljet";
-   
-//   sys_low_n = 10;
-   sys_low_n = 1;
-   sys_low[0]   = "";
-/*   sys_low[1]   = "_pu_low";
-   sys_low[2]   = "_gsplit_low";
-   sys_low[3]   = "_bfrag_low";
-   sys_low[4]   = "_cdfrag_low";
-   sys_low[5]   = "_cfrag_low";
-   sys_low[6]   = "_ksl_low";
-   sys_low[7]   = "_ntrkgen_low";
-   sys_low[8]   = "_jes_low";
-   sys_low[9]   = "_jer_low";*/
 
-   sys_up_n = sys_low_n-1;
-/*   sys_up[0]   = "_pu_up";
-   sys_up[1]   = "_gsplit_up";
-   sys_up[2]   = "_bfrag_up";
-   sys_up[3]   = "_cdfrag_up";
-   sys_up[4]   = "_cfrag_up";
-   sys_up[5]   = "_ksl_up";
-   sys_up[6]   = "_ntrkgen_up";
-   sys_up[7]   = "_jes_up";
-   sys_up[8]   = "_jer_up";*/
-
-   sys_n = sys_low_n + sys_up_n;
+   // Init systematics
+   syst = new LTANA::Syst();
+   syst->init();
    
-   for(int is1=0;is1<sys_low_n;is1++)
+   // systematics to include
+   sys.push_back(SYS_NONE);
+   sys.push_back(SYS_PU_UP);
+   sys.push_back(SYS_PU_DOWN);
+   sys.push_back(SYS_GSPLIT_UP);
+   sys.push_back(SYS_GSPLIT_DOWN);
+   sys.push_back(SYS_BFRAG_UP);
+   sys.push_back(SYS_BFRAG_DOWN);
+   sys.push_back(SYS_CDFRAG_UP);
+   sys.push_back(SYS_CDFRAG_DOWN);
+   sys.push_back(SYS_CFRAG_UP);
+   sys.push_back(SYS_CFRAG_DOWN);
+   sys.push_back(SYS_KSL_UP);
+   sys.push_back(SYS_KSL_DOWN);
+   sys.push_back(SYS_NTRKGEN_UP);
+   sys.push_back(SYS_NTRKGEN_DOWN);
+   sys.push_back(SYS_JES_UP);
+   sys.push_back(SYS_JES_DOWN);
+   sys.push_back(SYS_JER_UP);
+   sys.push_back(SYS_JER_DOWN);
+   
+   sys_n = sys.size();
+  
+   for(int is=0;is<sys_n;is++)
      {
-	sys[is1] = sys_low[is1];
-     }   
-   for(int is2=0;is2<sys_up_n;is2++)
-     {
-	sys[sys_low_n+is2] = sys_up[is2];
+	int idx = sys[is];
+	if( sys[is] >= 1000 )
+	  {	     
+	     idx = idx/1000;
+	     sysName[is] = syst->sysNameDown()[idx];
+	  }	
+	else
+	  {
+	     sysName[is] = syst->sysNameUp()[idx];
+	  }
      }   
    
    _s_Jet = new std::vector<std::pair<std::vector<std::string>,double*> >();
@@ -155,28 +190,27 @@ void LTANA::Hist::init()
 		    {
 		       for(int ssa=0;ssa<seladd_n;ssa++)
 			 {
-			    for(int h=0;h<histname_jet_n;h++)
+			    for(int h=0;h<hist_jet_n;h++)
 			      {
-				 std::string hn = histname_jet[h]+flav[j]+"_"+sel[ss]+"_"+eta[se]+"_"+selb[ssb]+seladd[ssa];
+				 std::string hn = histName_jet[h]+flav[j]+"_"+sel[ss]+"_"+eta[se]+"_"+selbName[ssb]+seladd[ssa];
 				 hname.push_back(hn);
 				 
 				 for(int s=0;s<sys_n;s++)
 				   {
-				      titl = hn+sys[s];
+				      titl = hn+sysName[s];
 				      std::vector<std::string> names;
 				      names.clear();
 				      names.push_back(titl);
-				      names.push_back(sys[s]);
-				      if( h == 6 )
+				      names.push_back(sysName[s]);
+				      if( hist_jet[h] == HIST_J1_MUPT )
 					_s_Jet->push_back(std::make_pair(names,RANGE::set_j_mupt[ss]));
-				      else if( h == 7 )
-//				      else if( h == 1 )
+				      else if( hist_jet[h] == HIST_J1_JP )
 					{
-					   if( ssb == 0 ) _s_Jet->push_back(std::make_pair(names,RANGE::set_j_JP_nosel[ss]));
-					   else if( ssb == 1 ) _s_Jet->push_back(std::make_pair(names,RANGE::set_j_JP_CSVL[ss]));
-					   else if( ssb == 2 ) _s_Jet->push_back(std::make_pair(names,RANGE::set_j_JP_CSVM[ss]));
-					   else if( ssb == 3 ) _s_Jet->push_back(std::make_pair(names,RANGE::set_j_JP_CSVT[ss]));
-					   else if( ssb == 6 ) _s_Jet->push_back(std::make_pair(names,RANGE::set_j_JP_TCHPT[ss]));
+					   if( selb[ssb] == BTAG_NONE ) _s_Jet->push_back(std::make_pair(names,RANGE::set_j_JP_nosel[ss]));
+					   else if( selb[ssb] == BTAG_CSVL ) _s_Jet->push_back(std::make_pair(names,RANGE::set_j_JP_CSVL[ss]));
+					   else if( selb[ssb] == BTAG_CSVM ) _s_Jet->push_back(std::make_pair(names,RANGE::set_j_JP_CSVM[ss]));
+					   else if( selb[ssb] == BTAG_CSVT ) _s_Jet->push_back(std::make_pair(names,RANGE::set_j_JP_CSVT[ss]));
+					   else if( selb[ssb] == BTAG_TCHPT ) _s_Jet->push_back(std::make_pair(names,RANGE::set_j_JP_TCHPT[ss]));
 					   else _s_Jet->push_back(std::make_pair(names,RANGE::set_j_JP_nosel[ss]));
 					}				      
 				      else
@@ -205,12 +239,8 @@ void LTANA::Hist::init()
    if( !isdata )
      {	
 	rw = new LTANA::Reweight();
-	rw->init(doRW,jPtMin,jPtMax,sel,selb,name_rw);
+	rw->init(doRW,jPtMin,jPtMax,sel,selbName,name_rw);
      }   
-
-   // Init systematics
-   syst = new LTANA::Syst();
-   syst->init();
 
    for(int j=0;j<flav_n;j++)
      {	
@@ -224,10 +254,10 @@ void LTANA::Hist::init()
 			 {
 			    for(int s=0;s<sys_n;s++)
 			      {
-				 for(int h=0;h<histname_jet_n;h++)
+				 for(int h=0;h<hist_jet_n;h++)
 				   {
 				      histNAMES[j][ss][se][ssb][ssa][h][s] =
-					histname_jet[h]+flav[j]+"_"+sel[ss]+"_"+eta[se]+"_"+selb[ssb]+seladd[ssa]+sys[s];
+					histName_jet[h]+flav[j]+"_"+sel[ss]+"_"+eta[se]+"_"+selbName[ssb]+seladd[ssa]+sysName[s];
 				   }
 			      }			    
 			 }		       
@@ -508,22 +538,29 @@ void LTANA::Hist::fill()
 	
 	if( passSel )
 	  {
-	     bool selbch_res[selb_n];
-	     for( int ibt=0;ibt<selb_n;ibt++ ) selbch_res[ibt] = false;
-	     
 	     float jbtCombSvx = ntP->Jet_CombSvx[ij];
 	     float jbtTCHP = ntP->Jet_Ip3P[ij];
-	     
-	     selbch_res[0] = true;
-	     if( jbtCombSvx >= 0.244 ) selbch_res[1] = true;
-//	     if( jbtCombSvx >= 0.679 ) selbch_res[2] = true;
-//	     if( jbtCombSvx >= 0.898 ) selbch_res[3] = true;
-//	     if( jbtTCHP >= 1.19 ) selbch_res[4] = true;
-//	     if( jbtTCHP >= 1.93 ) selbch_res[5] = true;
-//	     if( jbtTCHP >= 3.41 ) selbch_res[6] = true;
-	     if( jbtCombSvx < 0.898 ) selbch_res[2] = true;
-//	     if( jbtTCHP < 3.41 ) selbch_res[4] = true;
 
+	     std::vector<bool> selbch_res;
+	     for(int ibt=0;ibt<selb_n;ibt++) 
+	       {
+		  if( selb[ibt] == BTAG_NONE ) selbch_res.push_back(1);
+		  else
+		    {		       
+		       bool passBTAG = (
+					(selb[ibt] == BTAG_CSVL && jbtCombSvx >= 0.244) ||
+					(selb[ibt] == BTAG_CSVM && jbtCombSvx >= 0.679) ||
+					(selb[ibt] == BTAG_CSVT && jbtCombSvx >= 0.898) ||
+					(selb[ibt] == BTAG_TCHPL && jbtTCHP >= 1.19) ||
+					(selb[ibt] == BTAG_TCHPM && jbtTCHP >= 1.93) ||
+					(selb[ibt] == BTAG_TCHPT && jbtTCHP >= 3.41) ||
+					(selb[ibt] == BTAG_UNTAG && jbtCombSvx < 0.898)
+					);
+		       if( passBTAG ) selbch_res.push_back(1);
+		       else selbch_res.push_back(0);
+		    }
+	       }	     
+	     
 	     bool selach_res[seladd_n];
 	     for( int ibt=0;ibt<seladd_n;ibt++ ) selach_res[ibt] = false;
 
@@ -609,7 +646,7 @@ void LTANA::Hist::fill()
 		  std::vector<int> histSYS;
 		  std::vector<int> histVAR;
 
-		  for(int ih=0;ih<histname_jet_n;ih++)
+		  for(int ih=0;ih<hist_jet_n;ih++)
 		    {
 		       for(int ihb=0;ihb<selb_n;ihb++)
 			 {
@@ -652,15 +689,15 @@ void LTANA::Hist::fill()
 		       float var;
 		       std::vector<float> varv;
 		       bool single = 1;
-		       std::string varName = histname_jet[histVAR[hidx]];
-		       if( strcmp(varName.c_str(),"h_j1_svntrk_") == 0 ||
-			   strcmp(varName.c_str(),"h_j1_svmass_") == 0 )
+		       int varId = hist_jet[histVAR[hidx]];
+/*		       if( varId == HIST_J1_SVNTRK ||
+			   varId == HIST_J1_SVMASS )
 			 {			    
-			    varv = getVarVec(sys[histSYS[hidx]],ij,varName,jPtBin);
+			    varv = getVarVec(sys[histSYS[hidx]],ij,varId,jPtBin);
 			    single = 0;
 			 }		       
-		       else
-			 var = getVar(sys[histSYS[hidx]],ij,varName,jPtBin);
+		       else*/
+			 var = getVar(sys[histSYS[hidx]],ij,varId,jPtBin);
 		       
 		       if( fillThis )
 			 {
@@ -696,53 +733,53 @@ void LTANA::Hist::close()
    _fout->Close();
 }
 
-float LTANA::Hist::getVar(std::string sys,int ijet,std::string varName,int ibin)
+float LTANA::Hist::getVar(int isys,int ijet,int varId,int ibin)
 {
    float var = -666;
    
    if( ijet <= ntP->nJet )
      {	   
-	if( strcmp(varName.c_str(),"h_j1_JP_") == 0 )
+	if( varId == HIST_J1_JP )
 	  {
 	     var = Jet_Proba_New;
 	     if( var == 0. ) var = -666.;
 	  }	     
-	if( strcmp(varName.c_str(),"h_j1_BJP_") == 0 )
+/*	if( varId == HIST_J1_BJP )
 	  {		  
 	     var = ntP->Jet_Bprob[ijet];
 	     if( var == 0. ) var = -666.;
-	  }	     
-	if( strcmp(varName.c_str(),"h_j1_pthat_") == 0 )
+	  }*/
+/*	if( strcmp(varName.c_str(),"h_j1_pthat_") == 0 )
 	  {		  
 	     var = ntP->pthat/1000.;
-	  }	     
-	if( strcmp(varName.c_str(),"h_j1_ntrk_") == 0 )
+	  }*/
+	if( varId == HIST_J1_NTRK )
 	  {		  
 	     var = ntP->Jet_ntracks[ijet];
 	  }	     
-	if( strcmp(varName.c_str(),"h_j1_nseltrk_") == 0 )
+	if( varId == HIST_J1_NSELTRK )
 	  {		  
 	     var = ntP->Jet_nseltracks[ijet];
 	  }	     
-	if( strcmp(varName.c_str(),"h_j1_eta_") == 0 )
+	if( varId == HIST_J1_ETA )
 	  {		  
 	     var = ntP->Jet_eta[ijet];
 	  }	     
-	if( strcmp(varName.c_str(),"h_j1_phi_") == 0 )
+/*	if( strcmp(varName.c_str(),"h_j1_phi_") == 0 )
 	  {		  
 	     var = ntP->Jet_phi[ijet];
-	  }	     
-	if( strcmp(varName.c_str(),"h_j1_mass_") == 0 )
+	  }*/
+/*	if( strcmp(varName.c_str(),"h_j1_mass_") == 0 )
 	  {		  
 	     var = ntP->Jet_mass[ijet];
-	  }	     
-	if( strcmp(varName.c_str(),"h_j1_mupt_") == 0 )
+	  }*/
+	if( varId == HIST_J1_MUPT )
 	  {
 	     if( muidx.size() > 0 )
 	       var = ntP->Muon_pt[muidx[0]];
 	     else fillThis = false;
 	  }	     
-	if( strcmp(varName.c_str(),"h_j1_mueta_") == 0 )
+/*	if( strcmp(varName.c_str(),"h_j1_mueta_") == 0 )
 	  {
 	     if( muidx.size() > 0 )
 	       var = ntP->Muon_eta[muidx[0]];
@@ -759,43 +796,43 @@ float LTANA::Hist::getVar(std::string sys,int ijet,std::string varName,int ibin)
 	     if( muidx.size() > 0 )
 	       var = ntP->Muon_ptrel[muidx[0]];
 	     else fillThis = false;
-	  }	     
-	if( strcmp(varName.c_str(),"h_j1_npv_") == 0 )
+	  }*/
+/*	if( varId == HIST_J1_NPV )
 	  {
 	     if( ijet == 0 )
 	       var = ntP->nPV;
 	     else fillThis = false;
-	  }	     
-	if( strcmp(varName.c_str(),"h_j1_npu_") == 0 )
+	  }*/
+/*	if( strcmp(varName.c_str(),"h_j1_npu_") == 0 )
 	  {
 	     if( ijet == 0 )
 	       var = ntP->nPU;
 	     else fillThis = false;
-	  }	     
-	if( strcmp(varName.c_str(),"h_j1_njet_") == 0 )
+	  }*/
+	if( varId == HIST_J1_NJET )
 	  {
 	     if( ijet == 0 )
 	       var = ntP->nJet;
 	     else fillThis = false;
 	  }	     
-	if( strcmp(varName.c_str(),"h_j1_nmuon_") == 0 )
+/*	if( strcmp(varName.c_str(),"h_j1_nmuon_") == 0 )
 	  {
 	     if( ijet == 0 )
 	       var = ntP->nMuon;
 	     else fillThis = false;
-	  }	     
-	if( strcmp(varName.c_str(),"h_j1_nsv_") == 0 )
+	  }*/
+	if( varId == HIST_J1_NSV )
 	  {
 	     if( ijet == 0 )
 	       var = ntP->nSV;
 	     else fillThis = false;
 	  }	     
-	if( strcmp(varName.c_str(),"h_j1_nsvj_") == 0 )
+/*	if( strcmp(varName.c_str(),"h_j1_nsvj_") == 0 )
 	  {
 	     var = ntP->Jet_nLastSV[ijet];
-	  }	     
+	  }*/
 
-	if( strcmp(varName.c_str(),"h_j1_pt_") == 0 )
+	if( varId == HIST_J1_PT )
 	  {	
 	     double jptmax = 1250.;
 	     double jptmin = 0.;
@@ -805,14 +842,14 @@ float LTANA::Hist::getVar(std::string sys,int ijet,std::string varName,int ibin)
 		  jptmin = jPtMin[ibin-1];
 	       }	     
 	     
-	     var = (getPt(sys)-jptmin)/(jptmax-jptmin);
-	  }	     
+	     var = (getPt(isys)-jptmin)/(jptmax-jptmin);
+	  }
      }   
 
    return var;
 }
 
-std::vector<float> LTANA::Hist::getVarVec(std::string sys,int ijet,std::string varName,int ibin)
+std::vector<float> LTANA::Hist::getVarVec(int isys,int ijet,int varId,int ibin)
 {
    std::vector<float> var;
    var.clear();
@@ -821,7 +858,7 @@ std::vector<float> LTANA::Hist::getVarVec(std::string sys,int ijet,std::string v
    
    if( ijet <= ntP->nJet )
      {	   
-	if( strcmp(varName.c_str(),"h_j1_svntrk_") == 0 )
+/*	if( strcmp(varName.c_str(),"h_j1_svntrk_") == 0 )
 	  {
 	     if( ijet == 0 )
 	       {
@@ -838,31 +875,46 @@ std::vector<float> LTANA::Hist::getVarVec(std::string sys,int ijet,std::string v
 		    var.push_back(ntP->SV_mass[isv]);
 	       }	     
 	     else fillThis = false;
-	  }	     
+	  }*/
      }   
 
    return var;
 }
 
-float LTANA::Hist::getPt(std::string sys)
+float LTANA::Hist::getPt(int isys)
 {
    float var = -666;
    
-   if( (sys == "" ||
-	sys == "_sys_up" || sys == "_sys_low" ||
-	sys == "_pu_up" || sys == "_pu_low" ||
-	sys == "_gsplit_up" || sys == "_gsplit_low" ||
-	sys == "_bfrag_up" || sys == "_bfrag_low" ||
-	sys == "_cdfrag_up" || sys == "_cdfrag_low" ||
-	sys == "_cfrag_up" || sys == "_cfrag_low" ||
-	sys == "_ksl_up" || sys == "_ksl_low" ||
-	sys == "_ntrkgen_up" || sys == "_ntrkgen_low"
+   if( (isys == SYS_NONE ||
+	isys == SYS_PU_UP || isys == SYS_PU_DOWN ||
+	isys == SYS_GSPLIT_UP || isys == SYS_GSPLIT_DOWN ||
+	isys == SYS_BFRAG_UP || isys == SYS_BFRAG_DOWN ||
+	isys == SYS_CDFRAG_UP || isys == SYS_CDFRAG_DOWN ||
+	isys == SYS_CFRAG_UP || isys == SYS_CFRAG_DOWN ||
+	isys == SYS_KSL_UP || isys == SYS_KSL_DOWN ||
+	isys == SYS_NTRKGEN_UP || isys == SYS_NTRKGEN_DOWN
        )
        ||
        isdata )
      {
-	var = v_jet->Pt();
+	var = syst->v_jet()->Pt();
      }
+   else if( isys == SYS_JES_UP )
+     {
+	var = syst->v_jet_sys_jesTotalUp()->Pt();
+     }   
+   else if( isys == SYS_JES_DOWN )
+     {
+	var = syst->v_jet_sys_jesTotalDown()->Pt();
+     }   
+   else if( isys == SYS_JER_UP )
+     {
+	var = syst->v_jet_sys_jerTotalUp()->Pt();
+     }   
+   else if( isys == SYS_JER_DOWN )
+     {
+	var = syst->v_jet_sys_jerTotalDown()->Pt();
+     }   
 
    return var;
 }
