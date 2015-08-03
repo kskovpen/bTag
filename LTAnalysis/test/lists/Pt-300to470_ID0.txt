@@ -1,1 +1,0 @@
-/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/Legacy7TeV/QCD_MuEnrichedPt5_TuneZ2_7TeV_pythia6_Summer11LegDR-PU_S13_START53_LV6/Pt-300to470/JetTree_mc_Pt-300to470.root

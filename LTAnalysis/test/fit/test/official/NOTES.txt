@@ -1,9 +1,0 @@
-SF SFstat SFsyst SFtot (LT only)
-
-SF SFtot (official)
-
-###EFF LT: effMC effMCstat effDATA effDATAstat
-EFF LT: effDATA effDATAstat effMC effMCstat
-
-2011:
-https://twiki.cern.ch/twiki/pub/CMS/BtagPOG/SFb-mujet_payload.txt

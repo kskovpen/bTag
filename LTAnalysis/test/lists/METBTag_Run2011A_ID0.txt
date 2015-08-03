@@ -1,1 +1,0 @@
-/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/Legacy7TeV/METBTag_Run2011A/JetTree_METBTag_Run2011A.root
