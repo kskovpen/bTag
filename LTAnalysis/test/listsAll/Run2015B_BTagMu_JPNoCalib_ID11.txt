@@ -1,0 +1,10 @@
+/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_50ns/Run2015B_BTagMu/JetTree_data_FatJets_Subjets_70.root
+/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_50ns/Run2015B_BTagMu/JetTree_data_FatJets_Subjets_71.root
+/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_50ns/Run2015B_BTagMu/JetTree_data_FatJets_Subjets_72.root
+/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_50ns/Run2015B_BTagMu/JetTree_data_FatJets_Subjets_73.root
+/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_50ns/Run2015B_BTagMu/JetTree_data_FatJets_Subjets_74.root
+/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_50ns/Run2015B_BTagMu/JetTree_data_FatJets_Subjets_75.root
+/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_50ns/Run2015B_BTagMu/JetTree_data_FatJets_Subjets_76.root
+/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_50ns/Run2015B_BTagMu/JetTree_data_FatJets_Subjets_77.root
+/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_50ns/Run2015B_BTagMu/JetTree_data_FatJets_Subjets_78.root
+/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_50ns/Run2015B_BTagMu/JetTree_data_FatJets_Subjets_79.root

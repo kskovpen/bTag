@@ -1,0 +1,2 @@
+/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_50ns/Run2015B_JetHT/JetTree_data_FatJets_Subjets_98.root
+/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_50ns/Run2015B_JetHT/JetTree_data_FatJets_Subjets_99.root
