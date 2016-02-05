@@ -21,7 +21,7 @@ CSV;OperatingPoint,measurementType,sysType,jetFlavor,etaMin,etaMax,ptMin,ptMax,d
 1,lt,up_statistic,0,0,2.4,30,50,0,1,0.986289
 1,lt,down_statistic,0,0,2.4,30,50,0,1,0.980027
 1,lt,up_cb,0,0,2.4,30,50,0,1,0.992613
-1,lt,dxown_cb,0,0,2.4,30,50,0,1,0.973703
+1,lt,down_cb,0,0,2.4,30,50,0,1,0.973703
 1,lt,up_add,0,0,2.4,30,50,0,1,1.0189
 1,lt,down_add,0,0,2.4,30,50,0,1,0.947413
 1,lt,up,0,0,2.4,30,50,0,1,1.02078
@@ -48,7 +48,7 @@ CSV;OperatingPoint,measurementType,sysType,jetFlavor,etaMin,etaMax,ptMin,ptMax,d
 1,lt,up_statistic,0,0,2.4,50,70,0,1,0.967492
 1,lt,down_statistic,0,0,2.4,50,70,0,1,0.960354
 1,lt,up_cb,0,0,2.4,50,70,0,1,0.968696
-1,lt,dxown_cb,0,0,2.4,50,70,0,1,0.95915
+1,lt,down_cb,0,0,2.4,50,70,0,1,0.95915
 1,lt,up_add,0,0,2.4,50,70,0,1,1.00072
 1,lt,down_add,0,0,2.4,50,70,0,1,0.927129
 1,lt,up,0,0,2.4,50,70,0,1,1.00169
@@ -75,7 +75,7 @@ CSV;OperatingPoint,measurementType,sysType,jetFlavor,etaMin,etaMax,ptMin,ptMax,d
 1,lt,up_statistic,0,0,2.4,70,100,0,1,0.980612
 1,lt,down_statistic,0,0,2.4,70,100,0,1,0.974468
 1,lt,up_cb,0,0,2.4,70,100,0,1,0.981325
-1,lt,dxown_cb,0,0,2.4,70,100,0,1,0.973755
+1,lt,down_cb,0,0,2.4,70,100,0,1,0.973755
 1,lt,up_add,0,0,2.4,70,100,0,1,1.03026
 1,lt,down_add,0,0,2.4,70,100,0,1,0.924821
 1,lt,up,0,0,2.4,70,100,0,1,1.03103
@@ -102,7 +102,7 @@ CSV;OperatingPoint,measurementType,sysType,jetFlavor,etaMin,etaMax,ptMin,ptMax,d
 1,lt,up_statistic,0,0,2.4,100,140,0,1,0.986175
 1,lt,down_statistic,0,0,2.4,100,140,0,1,0.980805
 1,lt,up_cb,0,0,2.4,100,140,0,1,0.986924
-1,lt,dxown_cb,0,0,2.4,100,140,0,1,0.980056
+1,lt,down_cb,0,0,2.4,100,140,0,1,0.980056
 1,lt,up_add,0,0,2.4,100,140,0,1,0.999297
 1,lt,down_add,0,0,2.4,100,140,0,1,0.967683
 1,lt,up,0,0,2.4,100,140,0,1,1.00024
@@ -129,7 +129,7 @@ CSV;OperatingPoint,measurementType,sysType,jetFlavor,etaMin,etaMax,ptMin,ptMax,d
 1,lt,up_statistic,0,0,2.4,140,200,0,1,0.981682
 1,lt,down_statistic,0,0,2.4,140,200,0,1,0.97484
 1,lt,up_cb,0,0,2.4,140,200,0,1,0.981471
-1,lt,dxown_cb,0,0,2.4,140,200,0,1,0.975051
+1,lt,down_cb,0,0,2.4,140,200,0,1,0.975051
 1,lt,up_add,0,0,2.4,140,200,0,1,0.998467
 1,lt,down_add,0,0,2.4,140,200,0,1,0.958055
 1,lt,up,0,0,2.4,140,200,0,1,0.999801
@@ -156,7 +156,7 @@ CSV;OperatingPoint,measurementType,sysType,jetFlavor,etaMin,etaMax,ptMin,ptMax,d
 1,lt,up_statistic,0,0,2.4,200,300,0,1,0.99753
 1,lt,down_statistic,0,0,2.4,200,300,0,1,0.98297
 1,lt,up_cb,0,0,2.4,200,300,0,1,0.993082
-1,lt,dxown_cb,0,0,2.4,200,300,0,1,0.987418
+1,lt,down_cb,0,0,2.4,200,300,0,1,0.987418
 1,lt,up_add,0,0,2.4,200,300,0,1,1.00808
 1,lt,down_add,0,0,2.4,200,300,0,1,0.97242
 1,lt,up,0,0,2.4,200,300,0,1,1.01875
@@ -183,7 +183,7 @@ CSV;OperatingPoint,measurementType,sysType,jetFlavor,etaMin,etaMax,ptMin,ptMax,d
 1,lt,up_statistic,0,0,2.4,300,670,0,1,0.991307
 1,lt,down_statistic,0,0,2.4,300,670,0,1,0.969299
 1,lt,up_cb,0,0,2.4,300,670,0,1,0.982349
-1,lt,dxown_cb,0,0,2.4,300,670,0,1,0.978257
+1,lt,down_cb,0,0,2.4,300,670,0,1,0.978257
 1,lt,up_add,0,0,2.4,300,670,0,1,1.01077
 1,lt,down_add,0,0,2.4,300,670,0,1,0.949834
 1,lt,up,0,0,2.4,300,670,0,1,1.02379
