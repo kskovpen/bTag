@@ -185,7 +185,7 @@ void LTANA::Reweight::init(int doRW,
 }
 
 void LTANA::Reweight::apply(float *sfj,int ibtag,int jPtBin,
-			    int ntrk,int nseltrk,int njet,int nsv,float mupt,float jeta,float jpt)
+			    int ntrk,int nseltrk,int njet,int nsv,float mupt,float jeta,float jpt,float csvAway,float drAway,float jpAway,float jmass)
 {   
    float rwSF = 1.;
 
@@ -199,33 +199,73 @@ void LTANA::Reweight::apply(float *sfj,int ibtag,int jPtBin,
 	     std::vector<std::pair<float,float> > rwSfFound;
 	     rwSfFound = rwSf[iv][jPtBin][ibtag];
 	     
-	     if( strcmp(_rwName[iv].c_str(),"1d_ntrk") == 0 )
+	     if( strcmp(_rwName[iv].c_str(),"1d_ntrk") == 0 || 
+		 strcmp(_rwName[iv].c_str(),"FatJet_1d_ntrk") == 0 ||
+		 strcmp(_rwName[iv].c_str(),"SubJet_1d_ntrk") == 0
+	       )
 	       {		
 		  rwSF *= getSF(rwBinFound,rwSfFound,ntrk);
 	       }
-	     if( strcmp(_rwName[iv].c_str(),"1d_nseltrk") == 0 )
+	     if( strcmp(_rwName[iv].c_str(),"1d_nseltrk") == 0 ||
+		 strcmp(_rwName[iv].c_str(),"FatJet_1d_nseltrk") == 0 ||
+		 strcmp(_rwName[iv].c_str(),"SubJet_1d_nseltrk") == 0
+	       )
 	       {		
 		  rwSF *= getSF(rwBinFound,rwSfFound,nseltrk);
 	       }
-	     if( strcmp(_rwName[iv].c_str(),"1d_njet") == 0 )
+	     if( strcmp(_rwName[iv].c_str(),"1d_njet") == 0 ||
+		 strcmp(_rwName[iv].c_str(),"FatJet_1d_njet") == 0 ||
+		 strcmp(_rwName[iv].c_str(),"SubJet_1d_njet") == 0
+	       )
 	       {		
 		  rwSF *= getSF(rwBinFound,rwSfFound,njet);
 	       }
-	     if( strcmp(_rwName[iv].c_str(),"1d_nsv") == 0 )
+	     if( strcmp(_rwName[iv].c_str(),"1d_nsv") == 0 ||
+		 strcmp(_rwName[iv].c_str(),"FatJet_1d_nsv") == 0 ||
+		 strcmp(_rwName[iv].c_str(),"SubJet_1d_nsv") == 0
+	       )
 	       {		
 		  rwSF *= getSF(rwBinFound,rwSfFound,nsv);
 	       }
-	     if( strcmp(_rwName[iv].c_str(),"1d_mupt") == 0 )
+	     if( strcmp(_rwName[iv].c_str(),"1d_mupt") == 0 ||
+		 strcmp(_rwName[iv].c_str(),"FatJet_1d_mupt") == 0 ||
+		 strcmp(_rwName[iv].c_str(),"SubJet_1d_mupt") == 0
+	       )
 	       {
 		  rwSF *= getSF(rwBinFound,rwSfFound,mupt);
 	       }
-	     if( strcmp(_rwName[iv].c_str(),"1d_eta") == 0 )
+	     if( strcmp(_rwName[iv].c_str(),"1d_csvAway") == 0 )
+	       {
+		  rwSF *= getSF(rwBinFound,rwSfFound,csvAway);
+	       }
+	     if( strcmp(_rwName[iv].c_str(),"1d_drAway") == 0 )
+	       {
+		  rwSF *= getSF(rwBinFound,rwSfFound,drAway);
+	       }
+	     if( strcmp(_rwName[iv].c_str(),"1d_jpAway") == 0 )
+	       {
+		  rwSF *= getSF(rwBinFound,rwSfFound,jpAway);
+	       }
+	     if( strcmp(_rwName[iv].c_str(),"1d_eta") == 0 ||
+		 strcmp(_rwName[iv].c_str(),"FatJet_1d_eta") == 0 ||
+		 strcmp(_rwName[iv].c_str(),"SubJet_1d_eta") == 0
+	       )
 	       {		
 		  rwSF *= getSF(rwBinFound,rwSfFound,jeta);
 	       }
-	     if( strcmp(_rwName[iv].c_str(),"1d_pt") == 0 )
+	     if( 
+		 strcmp(_rwName[iv].c_str(),"FatJet_1d_mass") == 0 ||
+		 strcmp(_rwName[iv].c_str(),"SubJet_1d_mass") == 0
+	       )
 	       {		
-		  float jptmax = 1250.;
+		  rwSF *= getSF(rwBinFound,rwSfFound,jmass);
+	       }
+	     if( strcmp(_rwName[iv].c_str(),"1d_pt") == 0 ||
+		 strcmp(_rwName[iv].c_str(),"FatJet_1d_pt") == 0 ||
+		 strcmp(_rwName[iv].c_str(),"SubJet_1d_pt") == 0
+	       )
+	       {		
+		  float jptmax = 1500.;
 		  float jptmin = 0.;
 		  if( jPtBin > 0 ) 
 		    {
@@ -259,7 +299,7 @@ void LTANA::Reweight::apply(float *sfj,int ibtag,int jPtBin,
 		strcmp(_rwName2d[iv].c_str(),"2d_pt_vs_jeta") == 0
 	       )
 	       {
-		  float jptmax = 1250.;
+		  float jptmax = 1500.;
 		  float jptmin = 0.;
 		  if( jPtBin > 0 ) 
 		    {

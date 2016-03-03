@@ -8,7 +8,7 @@ LTANA::Syst::~Syst()
 {
 }
 
-void LTANA::Syst::init()
+void LTANA::Syst::init(std::string jtype)
 {   
    helper = new Helper();
 
@@ -41,12 +41,32 @@ void LTANA::Syst::init()
    _sysNameUp[11] = "_njet_up";
    _sysNameUp[12] = "_mupt_up";
    _sysNameUp[13] = "_jeta_up";
-   
-   jesTotal = new JetCorrectionUncertainty(*(new JetCorrectorParameters("/home-pbs/kskovpen/bTag/CMSSW_7_4_1/src/LTAnalysis/test/Summer13_V5_DATA_UncertaintySources_AK5PF.txt", "Total")));
+
+   std::cout << tool << " analysis" << std::endl;
+   if( strcmp(tool,"Hist") == 0 ) 
+     {
+	jesTotal = new JetCorrectionUncertainty(*(new JetCorrectorParameters("/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/LTAnalysis/test/Summer15_25nsV6_MC/Summer15_25nsV6_MC_UncertaintySources_AK4PFchs.txt", "Total")));
+     }   
+   else if( strcmp(tool,"HistBoost") == 0 ) 
+     {
+	if( strcmp(jtype.c_str(),"sub") == 0 )
+	  {
+	     jesTotal = new JetCorrectionUncertainty(*(new JetCorrectorParameters("/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/LTAnalysis/test/Summer15_25nsV6_MC/Summer15_25nsV6_MC_UncertaintySources_AK4PFchs.txt", "Total")));
+	  }
+	else
+	  {	     
+	     jesTotal = new JetCorrectionUncertainty(*(new JetCorrectorParameters("/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/LTAnalysis/test/Summer15_25nsV6_MC/Summer15_25nsV6_MC_UncertaintySources_AK8PFchs.txt", "Total")));
+	  }	
+     }   
+   else
+     {
+	std::cout << "Unknown JEC" << std::endl;
+	exit(1);
+     }   
 
    // JER taken from https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution
    
-/*   cJER[0] = 1.052; // 0.0-0.5
+   cJER[0] = 1.052; // 0.0-0.5
    cJER[1] = 1.057; // 0.5-1.1
    cJER[2] = 1.096; // 1.1-1.7
    cJER[3] = 1.134; // 1.7-2.3
@@ -62,8 +82,8 @@ void LTANA::Syst::init()
    cJER_up[1] = 1.114;
    cJER_up[2] = 1.161;
    cJER_up[3] = 1.228;
-   cJER_up[4] = 1.488;*/
-
+   cJER_up[4] = 1.488;
+   
    if( !isdata )
      {	
 	nPtRelPtBins = 15;
@@ -81,8 +101,8 @@ void LTANA::Syst::init()
 		  BTemplateCorrections[ib][ptb][1] = 1.;
 	       }
 	     
-	     std::ifstream MnusCorrectionsFile; 
-	     MnusCorrectionsFile.open("/home-pbs/kskovpen/bTag/CMSSW_7_4_1/src/LTAnalysis/test/PtRelFall12/EnergyFraction_" + PtRelPtBin[ptb] + "_m5.txt");
+	     std::ifstream MnusCorrectionsFile;
+	     MnusCorrectionsFile.open("/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/LTAnalysis/test/PtRelFall12/EnergyFraction_" + PtRelPtBin[ptb] + "_m5.txt");
 	     while( MnusCorrectionsFile )
 	       {
 		  float xBin, efcorr;
@@ -93,7 +113,7 @@ void LTANA::Syst::init()
 	       }
 	     
 	     std::ifstream PlusCorrectionsFile; 
-	     PlusCorrectionsFile.open("/home-pbs/kskovpen/bTag/CMSSW_7_4_1/src/LTAnalysis/test/PtRelFall12/EnergyFraction_" + PtRelPtBin[ptb] + "_p5.txt");
+	     PlusCorrectionsFile.open("/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/LTAnalysis/test/PtRelFall12/EnergyFraction_" + PtRelPtBin[ptb] + "_p5.txt");
 	     while( PlusCorrectionsFile )
 	       {
 		  float xBin, efcorr;
@@ -106,27 +126,53 @@ void LTANA::Syst::init()
      }
 }
 
-void LTANA::Syst::JEC(int ij)
+void LTANA::Syst::JEC(int ij,bool isSub)
 {	
    _v_jet = new TLorentzVector(0,0,0,0);
    _v_jet_sys_jesTotalUp = new TLorentzVector(0,0,0,0);
    _v_jet_sys_jesTotalDown = new TLorentzVector(0,0,0,0);
    _v_jet_sys_jerTotalUp = new TLorentzVector(0,0,0,0);
    _v_jet_sys_jerTotalDown = new TLorentzVector(0,0,0,0);
-	
-   float jeta = ntP->Jet_eta[ij];
-   float jphi = ntP->Jet_phi[ij];
-   float jm = ntP->Jet_mass[ij];
-//   float residual = 1.;
-//   if( ntP->Run > 0 ) residual = ntP->Jet_residual[ij];
-//   float jpt = ntP->Jet_pt[ij] * residual;
-   float jpt = ntP->Jet_pt[ij];
+
+   float jeta = 0;
+   float jphi = 0;
+   float jm = 0;
+   float jpt = 0;
+   
+   if( strcmp(tool,"HistBoost") != 0 )
+     { 	
+	jeta = ntP->Jet_eta[ij];
+	jphi = ntP->Jet_phi[ij];
+	jm = ntP->Jet_mass[ij];
+	//   float residual = 1.;
+	//   if( ntP->Run > 0 ) residual = ntP->Jet_residual[ij];
+	//   float jpt = ntP->Jet_pt[ij] * residual;
+	jpt = ntP->Jet_pt[ij];
+     }   
+   
+   if( strcmp(tool,"HistBoost") == 0 )
+     {
+	if( isSub )
+	  {	     
+	     jeta = ntPSub->SoftDropSubJetInfo_Jet_eta[ij];
+	     jphi = ntPSub->SoftDropSubJetInfo_Jet_phi[ij];
+	     jm = ntPSub->SoftDropSubJetInfo_Jet_mass[ij];
+	     jpt = ntPSub->SoftDropSubJetInfo_Jet_pt[ij];
+	  }
+	else
+	  {
+	     jeta = ntPSub->FatJetInfo_Jet_eta[ij];
+	     jphi = ntPSub->FatJetInfo_Jet_phi[ij];
+	     jm = ntPSub->FatJetInfo_Jet_mass[ij];
+	     jpt = ntPSub->FatJetInfo_Jet_pt[ij];
+	  }	
+     }   
 
    // JER
 
    _v_jet_sys_jerTotalUp->SetPtEtaPhiM(jpt,jeta,jphi,jm);
    _v_jet_sys_jerTotalDown->SetPtEtaPhiM(jpt,jeta,jphi,jm);
-/*	
+	
    if( !isdata )
      {	    
 	int etaIdx = -1;
@@ -138,8 +184,17 @@ void LTANA::Syst::JEC(int ij)
 	
 	double jpt_c = jpt;
 	if( etaIdx >= 0 )
-	  {		  
-	     double genpt = ntP->Jet_genpt[ij];
+	  {
+	     double genpt = 0;
+	     if( strcmp(tool,"HistBoost") != 0 )
+	       {		  
+		  genpt = ntP->Jet_genpt[ij];
+	       }	     
+	     if( strcmp(tool,"HistBoost") == 0 )
+	       {
+		  if( isSub ) genpt = ntPSub->FatJetInfo_Jet_genpt[ij];
+		  else genpt = ntPSub->SoftDropSubJetInfo_Jet_genpt[ij];
+	       }	     
 	     if( genpt >= 0. )
 	       {
 		  jpt_c = genpt + cJER[etaIdx]*(jpt-genpt);
@@ -150,7 +205,7 @@ void LTANA::Syst::JEC(int ij)
 		  if( jpt_c < 0. ) jpt_c = 0.;
 		  if( jpt_c_down < 0. ) jpt_c_down = 0.;
 		  if( jpt_c_up < 0. ) jpt_c_up = 0.;
-		  
+
 		  _v_jet_sys_jerTotalUp->SetPtEtaPhiM(jpt_c_up,jeta,jphi,jm);
 		  _v_jet_sys_jerTotalDown->SetPtEtaPhiM(jpt_c_down,jeta,jphi,jm);
 	       }
@@ -158,14 +213,13 @@ void LTANA::Syst::JEC(int ij)
 	
 	jpt = jpt_c;
      }	
-*/   
-   _v_jet->SetPtEtaPhiM(jpt,jeta,jphi,jm);
-/*	
+
+   _v_jet->SetPtEtaPhiM(jpt,jeta,jphi,jm);	
    _v_jet_sys_jesTotalUp->SetPtEtaPhiM(jpt,jeta,jphi,jm);
    _v_jet_sys_jesTotalDown->SetPtEtaPhiM(jpt,jeta,jphi,jm);
-*/
+   
    // JES
-/*   jesTotal->setJetPt(jpt);
+   jesTotal->setJetPt(jpt);
    jesTotal->setJetEta(jeta);
    double uncert = jesTotal->getUncertainty(true);
    
@@ -177,18 +231,18 @@ void LTANA::Syst::JEC(int ij)
    _v_jet_sys_jesTotalDown->SetPtEtaPhiE(jpt*(1.-uncert),
 					 jeta,
 					 _v_jet->Phi(),
-					 _v_jet->E()*(1.-uncert));*/
-
+					 _v_jet->E()*(1.-uncert));
+	
    // FIXME
-   _v_jet_sys_jesTotalUp->SetPtEtaPhiE(jpt,
-				       jeta,
-				       _v_jet->Phi(),
-				       _v_jet->E());
+//   _v_jet_sys_jesTotalUp->SetPtEtaPhiE(jpt,
+//				       jeta,
+//				       _v_jet->Phi(),
+//				       _v_jet->E());
    
-   _v_jet_sys_jesTotalDown->SetPtEtaPhiE(jpt,
-					 jeta,
-					 _v_jet->Phi(),
-					 _v_jet->E());
+//   _v_jet_sys_jesTotalDown->SetPtEtaPhiE(jpt,
+//					 jeta,
+//					 _v_jet->Phi(),
+//					 _v_jet->E());
 }
 
 // pileup reweighting sys
@@ -224,36 +278,60 @@ float LTANA::Syst::Pileup(int npu,int isys,TH1D *h_pu)
 }
 
 // gluon splitting sys
-float LTANA::Syst::GluonSplitting(int ij,int flavch,int isys)
+float LTANA::Syst::GluonSplitting(int ij,int flavch,int isys,std::string jtype)
 {
    float sf = 1.;
+
+   float drMin = 0.4;   
+   if( strcmp(tool,"HistBoost") == 0 && strcmp(jtype.c_str(),"sub") != 0 )
+     {
+	drMin = 0.8;
+     }   
    
    if( (isys == SYS_GSPLIT_DOWN || 
 	isys == SYS_GSPLIT_UP) &&
        !isdata )
-     {		       
+     {
 	bool GSPc = false, GSPb = false;
+
+	float jeta = ntP->Jet_eta[ij];
+	float jphi = ntP->Jet_phi[ij];   
+	if( strcmp(tool,"HistBoost") == 0 )
+	  {
+	     if( strcmp(jtype.c_str(),"sub") == 0 )
+	       {
+		  jeta = ntPSub->SoftDropSubJetInfo_Jet_eta[ij];
+		  jphi = ntPSub->SoftDropSubJetInfo_Jet_phi[ij];
+	       }
+	     else
+	       {		  
+		  jeta = ntPSub->FatJetInfo_Jet_eta[ij];
+		  jphi = ntPSub->FatJetInfo_Jet_phi[ij];
+	       }	     
+	  }   
 	
 	if( flavch == 2 )
-	  {
+	  {	     
 	     for( int k=0;k<ntP->ncQuarks;k++ )
 	       {
-		  if( ntP->cQuark_status[k] < 71 || ntP->cQuark_status[k] > 73 ) continue;
-		  double dRqj = helper->DeltaR(ntP->Jet_eta[ij],
-					       ntP->Jet_phi[ij], 
+		  if( ! ntP->cQuark_fromGSP[k] ) continue;
+//		  if( ntP->cQuark_status[k] < 71 || ntP->cQuark_status[k] > 73 ) continue;
+		  double dRqj = helper->DeltaR(jeta,
+					       jphi,
 					       ntP->cQuark_eta[k], 
 					       ntP->cQuark_phi[k]);
 		  if( k == ntP->ncQuarks-1 ) continue;
-		  if( dRqj > 0.4 ) continue;
+		  if( dRqj > drMin ) continue;
 		  for( int l=k+1;l<ntP->ncQuarks;l++ )
 		    {
-		       if( ntP->cQuark_status[l] < 71 || ntP->cQuark_status[l] > 73 ) continue;
-		       double dRqj2 = helper->DeltaR(ntP->Jet_eta[ij], 
-						     ntP->Jet_phi[ij], 
+		       if( ! ntP->cQuark_fromGSP[l] ) continue;
+//		       if( ntP->cQuark_status[l] < 71 || ntP->cQuark_status[l] > 73 ) continue;
+		       double dRqj2 = helper->DeltaR(jeta,
+						     jphi,
 						     ntP->cQuark_eta[l], 
 						     ntP->cQuark_phi[l]);
 		       if( ntP->cQuark_pdgID[k] * ntP->cQuark_pdgID[l] > 0 ) continue;
-		       if( dRqj2 < 0.4 ) GSPc = true;
+		       if( dRqj2 < drMin ) GSPc = true;
 		    }			    
 	       }		       
 	  }		  
@@ -262,22 +340,24 @@ float LTANA::Syst::GluonSplitting(int ij,int flavch,int isys)
 	  {
 	     for( int k=0;k<ntP->nbQuarks;k++ )
 	       {
-		  if( ntP->bQuark_status[k] < 71 || ntP->bQuark_status[k] > 79 ) continue;
-		  double dRqj = helper->DeltaR(ntP->Jet_eta[ij],
-					       ntP->Jet_phi[ij], 
+		  if( ! ntP->bQuark_fromGSP[k] ) continue;
+//		  if( ntP->bQuark_status[k] < 71 || ntP->bQuark_status[k] > 79 ) continue;
+		  double dRqj = helper->DeltaR(jeta,
+					       jphi,
 					       ntP->bQuark_eta[k], 
 					       ntP->bQuark_phi[k]);
 		  if( k == ntP->nbQuarks-1 ) continue;
-		  if( dRqj > 0.4 ) continue;
+		  if( dRqj > drMin ) continue;
 		  for( int l=k+1;l<ntP->nbQuarks;l++ )
 		    {
-		       if( ntP->bQuark_status[l] < 71 || ntP->bQuark_status[l] > 79 ) continue;
-		       double dRqj2 = helper->DeltaR(ntP->Jet_eta[ij], 
-						     ntP->Jet_phi[ij], 
+		       if( ! ntP->bQuark_fromGSP[l] ) continue;
+//		       if( ntP->bQuark_status[l] < 71 || ntP->bQuark_status[l] > 79 ) continue;
+		       double dRqj2 = helper->DeltaR(jeta, 
+						     jphi,
 						     ntP->bQuark_eta[l], 
 						     ntP->bQuark_phi[l]);
 		       if( ntP->bQuark_pdgID[k] * ntP->bQuark_pdgID[l] > 0 ) continue;
-		       if( dRqj2 < 0.4 ) GSPb = true;
+		       if( dRqj2 < drMin ) GSPb = true;
 		    }			    
 	       }		       
 	  }		  
@@ -285,26 +365,51 @@ float LTANA::Syst::GluonSplitting(int ij,int flavch,int isys)
 	if( 
 	   isys == SYS_GSPLIT_DOWN &&
 	   ((GSPc && flavch == 2) || (GSPb && flavch == 1))
-	  ) sf *= 0.5;
+//	  ) sf *= 0.75;
+	  ) sf *= 0.5;	
 	if( 
 	   isys == SYS_GSPLIT_UP &&
 	   ((GSPc && flavch == 2) || (GSPb && flavch == 1))
-	  ) sf *= 1.5;
+//	  ) sf *= 1.25;
+	  ) sf *= 1.5;   
      }
    
    return sf;
 }
 
 // b fragmentation sys
-float LTANA::Syst::bFrag(int ij,int flavch,int isys)
+float LTANA::Syst::bFrag(int ij,int flavch,int isys,std::string jtype)
 {
    float sf = 1.;
+
+   float drMin = 0.4;   
+   if( strcmp(tool,"HistBoost") == 0 && strcmp(jtype.c_str(),"sub") != 0 )
+     {
+	drMin = 0.8;
+     }   
    
    if( (isys == SYS_BFRAG_DOWN ||
 	isys == SYS_BFRAG_UP) &&
        !isdata )
      {		 
 	float jPT = ntP->Jet_pt[ij];
+	float jeta = ntP->Jet_eta[ij];
+	float jphi = ntP->Jet_phi[ij];
+	if( strcmp(tool,"HistBoost") == 0 )
+	  {
+	     if( strcmp(jtype.c_str(),"sub") == 0 )
+	       {
+		  jPT = ntPSub->SoftDropSubJetInfo_Jet_pt[ij];
+		  jeta = ntPSub->SoftDropSubJetInfo_Jet_eta[ij];
+		  jphi = ntPSub->SoftDropSubJetInfo_Jet_phi[ij];
+	       }
+	     else
+	       {	     		  
+		  jPT = ntPSub->FatJetInfo_Jet_pt[ij];
+		  jeta = ntPSub->FatJetInfo_Jet_eta[ij];
+		  jphi = ntPSub->FatJetInfo_Jet_phi[ij];
+	       }	     
+	  }	
 	float WeightBFrag = 1.;
 	float EnergyFraction = 0.; 
 	int iB = -1, iptBin = 0, efbin = -1;
@@ -331,10 +436,12 @@ float LTANA::Syst::bFrag(int ij,int flavch,int isys)
 	     float B_Mass = 0.;
 	     for( int ib=0;ib<ntP->nBHadrons;ib++ )
 	       {
-		  if( helper->DeltaR(ntP->Jet_eta[ij],
-				     ntP->Jet_phi[ij], 
-				     ntP->BHadron_eta[ib], 
-				     ntP->BHadron_phi[ib]) < 0.4 )
+		  float drB = helper->DeltaR(jeta,
+					     jphi,
+					     ntP->BHadron_eta[ib], 
+					     ntP->BHadron_phi[ib]);
+		  
+		  if( drB < drMin )
 		    {
 		       if( ntP->BHadron_mass[ib] > B_Mass ) 
 			 {
@@ -347,6 +454,10 @@ float LTANA::Syst::bFrag(int ij,int flavch,int isys)
 	     if( iB >= 0 ) 
 	       {
 		  EnergyFraction = ntP->BHadron_pT[iB]/ntP->Jet_genpt[ij];
+		  if( strcmp(tool,"HistBoost") == 0 )
+		    {
+		       EnergyFraction = ntP->BHadron_pT[iB]/ntPSub->FatJetInfo_Jet_genpt[ij];
+		    }		  
 		  efbin = int( EnergyFraction / 0.02 );
 		  if( efbin >= 0 && efbin < 100 ) 
 		    {
@@ -363,14 +474,36 @@ float LTANA::Syst::bFrag(int ij,int flavch,int isys)
 }
 
 // c->D fragmentation sys
-float LTANA::Syst::cdFrag(int ij,int flavch,int isys)
+float LTANA::Syst::cdFrag(int ij,int flavch,int isys,std::string jtype)
 {	
    float sf = 1.;
+
+   float drMin = 0.4;   
+   if( strcmp(tool,"HistBoost") == 0 && strcmp(jtype.c_str(),"sub") != 0 )
+     {
+	drMin = 0.8;
+     }   
    
    if( (isys == SYS_CDFRAG_DOWN ||
 	isys == SYS_CDFRAG_UP) &&
        !isdata )
      {		       
+	float jeta = ntP->Jet_eta[ij];
+	float jphi = ntP->Jet_phi[ij];
+	if( strcmp(tool,"HistBoost") == 0 )
+	  {
+	     if( strcmp(jtype.c_str(),"sub") == 0 )
+	       {
+		  jeta = ntPSub->SoftDropSubJetInfo_Jet_eta[ij];
+		  jphi = ntPSub->SoftDropSubJetInfo_Jet_phi[ij];
+	       }
+	     else
+	       {	     		  
+		  jeta = ntPSub->FatJetInfo_Jet_eta[ij];
+		  jphi = ntPSub->FatJetInfo_Jet_phi[ij];
+	       }	     
+	  }   
+
 	if( flavch == 2 ||
 	    flavch == 1 )
 	  {
@@ -381,9 +514,9 @@ float LTANA::Syst::cdFrag(int ij,int flavch,int isys)
 	       {
 		  double dR = helper->DeltaR(ntP->DHadron_eta[k], 
 					     ntP->DHadron_phi[k], 
-					     ntP->Jet_eta[ij], 
-					     ntP->Jet_phi[ij]);
-		  if( dR > 0.4 ) continue;
+					     jeta,
+					     jphi);
+		  if( dR > drMin ) continue;
 		  bool isSemiMu = false;
 		  int nd = ntP->DHadron_nDaughters[k];
 		  for( int kk=0;kk<nd;kk++ )
@@ -413,12 +546,34 @@ float LTANA::Syst::cdFrag(int ij,int flavch,int isys)
 }
 
 // c fragmentation sys
-float LTANA::Syst::cFrag(int ij,int flavch,int isys)
+float LTANA::Syst::cFrag(int ij,int flavch,int isys,std::string jtype)
 {
    float sf = 1.;
+
+   float drMin = 0.4;   
+   if( strcmp(tool,"HistBoost") == 0 && strcmp(jtype.c_str(),"sub") != 0 )
+     {
+	drMin = 0.8;
+     }   
    
    if( !isdata )
      {
+	float jeta = ntP->Jet_eta[ij];
+	float jphi = ntP->Jet_phi[ij];
+	if( strcmp(tool,"HistBoost") == 0 )
+	  {
+	     if( strcmp(jtype.c_str(),"sub") == 0 )
+	       {
+		  jeta = ntPSub->SoftDropSubJetInfo_Jet_eta[ij];
+		  jphi = ntPSub->SoftDropSubJetInfo_Jet_phi[ij];
+	       }
+	     else
+	       {		  
+		  jeta = ntPSub->FatJetInfo_Jet_eta[ij];
+		  jphi = ntPSub->FatJetInfo_Jet_phi[ij];
+	       }	     
+	  }   
+	
 	if( flavch == 2 )
 	  {
 	     bool hasCquark = 0;
@@ -426,9 +581,9 @@ float LTANA::Syst::cFrag(int ij,int flavch,int isys)
 	       {
 		  double dRc = helper->DeltaR(ntP->cQuark_eta[c], 
 					      ntP->cQuark_phi[c], 
-					      ntP->Jet_eta[ij], 
-					      ntP->Jet_phi[ij]);
-		  if( dRc < 0.3 ) hasCquark = 1;
+					      jeta,
+					      jphi);
+		  if( dRc < drMin ) hasCquark = 1;
 	       }
 	     
 	     if( hasCquark )
@@ -438,9 +593,9 @@ float LTANA::Syst::cFrag(int ij,int flavch,int isys)
 		    {
 		       double dR = helper->DeltaR(ntP->DHadron_eta[k], 
 						  ntP->DHadron_phi[k], 
-						  ntP->Jet_eta[ij], 
-						  ntP->Jet_phi[ij]);
-		       if( dR > 0.4 ) continue;
+						  jeta, 
+						  jphi);
+		       if( dR > drMin ) continue;
 		       
 		       if( abs(ntP->DHadron_pdgID[k]) == 411 ) isDplus = true;
 		       if( abs(ntP->DHadron_pdgID[k]) == 421 ) isDzero = true;
@@ -465,14 +620,30 @@ float LTANA::Syst::cFrag(int ij,int flavch,int isys)
 }
 
 // K0s Lambda sys
-float LTANA::Syst::Ks(int ij,int flavch,int isys)
+float LTANA::Syst::Ks(int ij,int flavch,int isys,std::string jtype)
 {	
    float sf = 1.;
    
    if( (isys == SYS_KSL_DOWN ||
 	isys == SYS_KSL_UP) &&
        !isdata )
-     {		       
+     {
+	float jeta = ntP->Jet_eta[ij];
+	float jphi = ntP->Jet_phi[ij];
+	if( strcmp(tool,"HistBoost") == 0 )
+	  {
+	     if( strcmp(jtype.c_str(),"sub") == 0 )
+	       {
+		  jeta = ntPSub->SoftDropSubJetInfo_Jet_eta[ij];
+		  jphi = ntPSub->SoftDropSubJetInfo_Jet_phi[ij];
+	       }
+	     else
+	       {		  
+		  jeta = ntPSub->FatJetInfo_Jet_eta[ij];
+		  jphi = ntPSub->FatJetInfo_Jet_phi[ij];
+	       }	     
+	  }   
+	
 	int nK0s = 0, nLambda = 0;
 	if( flavch == 3 )
 	  {
@@ -480,8 +651,8 @@ float LTANA::Syst::Ks(int ij,int flavch,int isys)
 	       {
 		  double dR = helper->DeltaR(ntP->GenV0_eta[k], 
 					     ntP->GenV0_phi[k], 
-					     ntP->Jet_eta[ij], 
-					     ntP->Jet_phi[ij]);
+					     jeta,
+					     jphi);
 		  if( dR > 0.3 ) continue;
 		  int pdgid = abs(ntP->GenV0_pdgID[k]);
 		  if( pdgid == 310 )  nK0s++;
@@ -499,12 +670,34 @@ float LTANA::Syst::Ks(int ij,int flavch,int isys)
 }
 
 // generated ntrk in b- and c- hadron decays sys
-float LTANA::Syst::GenNTrk(int ij,int flavch,int isys)
-{	
+float LTANA::Syst::GenNTrk(int ij,int flavch,int isys,std::string jtype)
+{
    float sf = 1.;
+
+   float drMin = 0.4;   
+   if( strcmp(tool,"HistBoost") == 0 && strcmp(jtype.c_str(),"sub") != 0 )
+     {
+	drMin = 0.8;
+     }   
    
    if( !isdata )
      {		       		  
+	float jeta = ntP->Jet_eta[ij];
+	float jphi = ntP->Jet_phi[ij];
+	if( strcmp(tool,"HistBoost") == 0 )
+	  {
+	     if( strcmp(jtype.c_str(),"sub") == 0 )
+	       {
+		  jeta = ntPSub->SoftDropSubJetInfo_Jet_eta[ij];
+		  jphi = ntPSub->SoftDropSubJetInfo_Jet_phi[ij];
+	       }
+	     else
+	       {		  
+		  jeta = ntPSub->FatJetInfo_Jet_eta[ij];
+		  jphi = ntPSub->FatJetInfo_Jet_phi[ij];
+	       }	     
+	  }   
+
 	// Weight in number of generated tracks from c-hadrons (+_3%)
 	float WeightCtrkMin[] = 
 	  {
@@ -537,9 +730,9 @@ float LTANA::Syst::GenNTrk(int ij,int flavch,int isys)
 	       {
 		  double dRc = helper->DeltaR(ntP->cQuark_eta[c], 
 					      ntP->cQuark_phi[c], 
-					      ntP->Jet_eta[ij], 
-					      ntP->Jet_phi[ij]);
-		  if( dRc < 0.3 ) hasCquark = 1;
+					      jeta,
+					      jphi);
+		  if( dRc < drMin ) hasCquark = 1;
 	       }
 	     
 	     if( hasCquark )
@@ -548,9 +741,9 @@ float LTANA::Syst::GenNTrk(int ij,int flavch,int isys)
 		    {
 		       double dR = helper->DeltaR(ntP->DHadron_eta[k], 
 						  ntP->DHadron_phi[k], 
-						  ntP->Jet_eta[ij], 
-						  ntP->Jet_phi[ij]);
-		       if( dR > 0.4 ) continue;
+						  jeta,
+						  jphi);
+		       if( dR > drMin ) continue;
 		       
 		       if( nChargedGen1_c >= 0 && nChargedGen2_c < 0 ) nChargedGen2_c = ntP->DHadron_nCharged[k];
 		       if( nChargedGen1_c < 0 )  nChargedGen1_c = ntP->DHadron_nCharged[k];
@@ -567,9 +760,9 @@ float LTANA::Syst::GenNTrk(int ij,int flavch,int isys)
 		  if( ntP->BHadron_hasBdaughter[k] == 1 ) continue;
 		  double dR = helper->DeltaR(ntP->BHadron_eta[k], 
 					     ntP->BHadron_phi[k], 
-					     ntP->Jet_eta[ij], 
-					     ntP->Jet_phi[ij]);
-		  if( dR > 0.4 ) continue;
+					     jeta,
+					     jphi);
+		  if( dR > drMin ) continue;
 		  int k1 = ntP->BHadron_DHadron1[k];
 		  int k2 = ntP->BHadron_DHadron2[k];
 		  if( nChargedGen1_b >= 0 && nChargedGen2_b < 0 ) 
@@ -595,6 +788,8 @@ float LTANA::Syst::GenNTrk(int ij,int flavch,int isys)
 	int nchgen1_c = nChargedGen1_c, nchgen2_c = nChargedGen2_c;
 	if( nchgen1_c > 19 ) nchgen1_c = 19;
 	if( nchgen2_c > 19 ) nchgen2_c = 19;
+	
+//	std::cout << flavch << " " << nchgen1_c << " " << nchgen2_c << " " << nchgen1_b << " " << nchgen2_b << std::endl;
 	
 	if( isys == SYS_NTRKGEN_DOWN )
 	  {
@@ -622,7 +817,7 @@ float LTANA::Syst::GenNTrk(int ij,int flavch,int isys)
 		  if( nchgen2_b >= 0 ) sf *= WeightBtrkMax[nchgen2_b];
 	       }
 	  }
-     } 
+     }   
    
    return sf;
 }

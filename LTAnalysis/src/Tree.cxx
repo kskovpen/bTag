@@ -178,6 +178,9 @@ void LTANA::Tree::Init(TChain *tree)
    fChain->SetBranchAddress("Jet_CombIVF", Jet_CombIVF, &b_Jet_CombIVF);
    fChain->SetBranchAddress("Jet_CombIVF_P", Jet_CombIVF_P, &b_Jet_CombIVF_P);
    fChain->SetBranchAddress("Jet_CombIVF_N", Jet_CombIVF_N, &b_Jet_CombIVF_N);
+   fChain->SetBranchAddress("Jet_cMVAv2", Jet_cMVAv2, &b_Jet_cMVAv2);
+//   fChain->SetBranchAddress("Jet_cMVAv2_P", Jet_cMVAv2_P, &b_Jet_cMVAv2_P);
+//   fChain->SetBranchAddress("Jet_cMVAv2_N", Jet_cMVAv2_N, &b_Jet_cMVAv2_N);
    fChain->SetBranchAddress("Jet_SoftMuN", Jet_SoftMuN, &b_Jet_SoftMuN);
    fChain->SetBranchAddress("Jet_SoftMuP", Jet_SoftMuP, &b_Jet_SoftMuP);
    fChain->SetBranchAddress("Jet_SoftMu", Jet_SoftMu, &b_Jet_SoftMu);
