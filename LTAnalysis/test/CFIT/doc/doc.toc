@@ -1,9 +1,0 @@
-\contentsline {section}{\numberline {1}Introduction}{3}{section.1}
-\contentsline {section}{\numberline {2}Install}{3}{section.2}
-\contentsline {section}{\numberline {3}Fit procedure}{3}{section.3}
-\contentsline {section}{\numberline {4}Estimation of the fit uncertainty}{5}{section.4}
-\contentsline {section}{\numberline {5}Scale factor measurement}{5}{section.5}
-\contentsline {section}{\numberline {6}User method description}{5}{section.6}
-\contentsline {section}{\numberline {7}Examples}{8}{section.7}
-\contentsline {subsection}{\numberline {7.1}Single fit}{8}{subsection.7.1}
-\contentsline {subsection}{\numberline {7.2}Scale factor measurement}{13}{subsection.7.2}

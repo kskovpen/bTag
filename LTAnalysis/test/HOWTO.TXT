@@ -1,7 +1,0 @@
-source /afs/cern.ch/project/eos/installation/cms/etc/setup.sh
-export EOS_MGM_URL=root://eoscms.cern.ch
-eos ls /eos/cms/store/group/phys_btag/performance/CMSSW_7_4_1_patch1/
-xsec are in pb !
-
-https://twiki.cern.ch/twiki/bin/viewauth/CMS/JECDataMC
-https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#JetCorUncertainties
