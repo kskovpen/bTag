@@ -21,14 +21,14 @@ LDLIBS  = $(ROOTLIBS) $(JESLIB)
 
 ADDINC = $(JESINC)
 
-SRC = src/LTAnalysis.cxx src/Hist.cxx src/Tree.cxx \
+SRC = src/LTAnalysis.cxx src/Hist.cxx src/HistBoost.cxx src/Tree.cxx src/TreeSub.cxx \
 src/Syst.cxx src/Helper.cxx src/Reweight.cxx src/Trigger.cxx
 
-INC = include/Hist.h include/Common.h include/Tree.h \
-include/Ranges.h include/Syst.h include/Helper.h include/Reweight.h \
+INC = include/Hist.h include/HistBoost.h include/Common.h include/Tree.h include/TreeSub.h \
+include/Ranges.h include/RangesFat.h include/RangesSub.h include/Syst.h include/Helper.h include/Reweight.h \
 include/Trigger.h
 
-OBJ = LTAnalysis.o Hist.o Tree.o Syst.o Helper.o Reweight.o Trigger.o
+OBJ = LTAnalysis.o Hist.o HistBoost.o Tree.o TreeSub.o Syst.o Helper.o Reweight.o Trigger.o
 
 EXE = LTAnalysis
 
