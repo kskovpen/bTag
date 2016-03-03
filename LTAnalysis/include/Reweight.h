@@ -30,7 +30,7 @@ namespace LTANA
 		  std::vector<std::string> rwName2d);
 
 	void apply(float *sfj,int ibtag,int jPtBin,
-		   int ntrk,int nseltrk,int njet,int nsv,float mupt,float jeta,float jpt);
+		   int ntrk,int nseltrk,int njet,int nsv,float mupt,float jeta,float jpt,float csvAway,float drAway,float jpAway,float jmass);
 
 	float getSF(std::vector<std::pair<float,float> > vBin,
 		    std::vector<std::pair<float,float> > vSf,
@@ -65,7 +65,7 @@ namespace LTANA
 	int _selbN;
 	
 	int _doRW;
-	
+
 	std::vector<float> _jPtMin;
 	std::vector<float> _jPtMax;
      };

@@ -49,15 +49,15 @@ namespace LTANA
 	Syst();
 	virtual ~Syst();
 	
-	void init();
-	void JEC(int ij);
+	void init(std::string jtype = "");
+	void JEC(int ij,bool isSub = 0);
 	float Pileup(int npu,int isys,TH1D *h_pu);
-	float GluonSplitting(int ij,int flavch,int isys);
-	float bFrag(int ij,int flavch,int isys);
-	float cdFrag(int ij,int flavch,int isys);
-	float cFrag(int ij,int flavch,int isys);
-	float Ks(int ij,int flavch,int isys);
-	float GenNTrk(int ij,int flavch,int isys);
+	float GluonSplitting(int ij,int flavch,int isys,std::string jtype = "");
+	float bFrag(int ij,int flavch,int isys,std::string jtype = "");
+	float cdFrag(int ij,int flavch,int isys,std::string jtype = "");
+	float cFrag(int ij,int flavch,int isys,std::string jtype = "");
+	float Ks(int ij,int flavch,int isys,std::string jtype = "");
+	float GenNTrk(int ij,int flavch,int isys,std::string jtype = "");
 	void clear();
 
 	int nPtRelPtBins;
@@ -72,7 +72,7 @@ namespace LTANA
 	TLorentzVector* v_jet_sys_jesTotalDown() {return _v_jet_sys_jesTotalDown;};
 	TLorentzVector* v_jet_sys_jerTotalUp() {return _v_jet_sys_jerTotalUp;};
 	TLorentzVector* v_jet_sys_jerTotalDown() {return _v_jet_sys_jerTotalDown;};
-
+	
 	std::string *sysNameDown() {return _sysNameDown;};
 	std::string *sysNameUp() {return _sysNameUp;};
 	

@@ -12,6 +12,7 @@
 #include "TLorentzVector.h"
 
 #include "Tree.h"
+#include "TreeSub.h"
 #include "Syst.h"
 #include "Reweight.h"
 
@@ -32,9 +33,12 @@ extern float eff;
 extern int nmax;
 extern int doRW;
 extern char* tool;
+extern int sample;
 
 extern TChain *tr;
+extern TChain *trSub;
 
 extern LTANA::Tree *ntP;
+extern LTANA::TreeSub *ntPSub;
 
 #endif

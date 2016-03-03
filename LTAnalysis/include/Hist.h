@@ -16,8 +16,17 @@
 #define HIST_J1_CSVIVF 10
 #define HIST_J1_MUPTREL 11
 #define HIST_J1_NTRKGEN 12
+#define HIST_J1_DRAWAY 13
+#define HIST_J1_CSVAWAY 14
+#define HIST_J1_TCHPAWAY 15
+#define HIST_J1_JPAWAY 16
+#define HIST_J1_PTAWAY 17
+#define HIST_J1_ETAAWAY 18
+#define HIST_J1_HASMUON 19
 
 #define HIST_2D_J1_PT_VS_JETA 0
+#define HIST_2D_J1_JP_VS_CSV 1
+#define HIST_2D_J1_JP_VS_CMVA 2
 
 #define BTAG_NONE 0
 #define BTAG_CSVL 1
@@ -29,6 +38,12 @@
 #define BTAG_UNTAGCSVL 7
 #define BTAG_UNTAGCSVM 8
 #define BTAG_UNTAGCSVT 9
+#define BTAG_CMVAL 10
+#define BTAG_CMVAM 11
+#define BTAG_CMVAT 12
+#define BTAG_UNTAGCMVAL 13
+#define BTAG_UNTAGCMVAM 14
+#define BTAG_UNTAGCMVAT 15
 
 namespace LTANA
 {
@@ -86,6 +101,12 @@ namespace LTANA
 	
 	float Jet_Proba_New;
 	int ntrkgen;
+	float drAway;
+	float csvAway;
+	float tchpAway;
+	float jpAway;
+	float ptAway;
+	float etaAway;
 
 	double muptcut;
 	
@@ -93,6 +114,7 @@ namespace LTANA
 	std::vector<float> jPtMax;
 	
 	std::vector<int> muidx;
+	bool hasMuon;
 	
 	bool fillThis;
 	
@@ -109,10 +131,10 @@ namespace LTANA
       private:
 
 	// [FLAVOUR][PT][ETA][BTAG][ADDSEL][VAR][2*(NSYS-1)+1]
-	std::string histNAMES[5][33][1][5][1][20][25];
-	std::string histNAMES_2d[5][33][1][5][1][20][25];
-	std::string histNAMES_3d[5][33][1][5][1][20][25];
-	
+	std::string histNAMES[5][15][1][20][1][10][25];
+	std::string histNAMES_2d[5][15][1][20][1][10][25];
+	std::string histNAMES_3d[5][15][1][20][1][10][25];
+
 	TLorentzVector *v_mu;
 	TLorentzVector *v_jet;
 	
@@ -121,6 +143,19 @@ namespace LTANA
 	TFile *_fout;
 
 	TH1D *_h_pileup;
+	
+	TTree *ttree;
+	int t_eventId;
+	int t_runId;
+	int t_lumiId;
+	float t_j1Pt;
+	float t_j1Eta;
+	float t_j2Pt;
+	float t_j2Eta;
+	float t_j3Pt;
+	float t_j3Eta;
+	float t_j4Pt;
+	float t_j4Eta;
 	
 	Syst *syst;
 	Reweight *rw;

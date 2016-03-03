@@ -143,6 +143,9 @@ public :
    Float_t         Jet_CombIVF[1000];   //[nJet]
    Float_t         Jet_CombIVF_P[1000];   //[nJet]
    Float_t         Jet_CombIVF_N[1000];   //[nJet]
+   Float_t         Jet_cMVAv2[1000];   //[nJet]
+//   Float_t         Jet_cMVAv2_P[1000];   //[nJet]
+//   Float_t         Jet_cMVAv2_N[1000];   //[nJet]
    Float_t         Jet_SoftMuN[1000];   //[nJet]
    Float_t         Jet_SoftMuP[1000];   //[nJet]
    Float_t         Jet_SoftMu[1000];   //[nJet]
@@ -407,6 +410,9 @@ public :
    TBranch        *b_Jet_CombIVF;   //!
    TBranch        *b_Jet_CombIVF_P;   //!
    TBranch        *b_Jet_CombIVF_N;   //!
+   TBranch        *b_Jet_cMVAv2;   //!
+//   TBranch        *b_Jet_cMVAv2_P;   //!
+//   TBranch        *b_Jet_cMVAv2_N;   //!
    TBranch        *b_Jet_SoftMuN;   //!
    TBranch        *b_Jet_SoftMuP;   //!
    TBranch        *b_Jet_SoftMu;   //!

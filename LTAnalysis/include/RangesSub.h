@@ -1,7 +1,7 @@
-#ifndef SYSRANGES
-#define SYSRANGES
+#ifndef SYSRANGESSUB
+#define SYSRANGESSUB
 
-namespace RANGE
+namespace RANGESUB
 {   
    double set_j_pt[3] = {25,0.,1.0};
 //   double set_j_pt[3] = {80,30.,1000.};
@@ -10,8 +10,8 @@ namespace RANGE
    double set_j_ntrk[3] = {60,0.,60.};
    double set_j_eta[3] = {30,-2.4,2.4};
    double set_j_phi[3] = {30,-3.2,3.2};
-   double set_j_mass[3] = {30,0.,100.};
    double set_j_mueta[3] = {30,-5.,5.};
+   double set_j_mupt[3] = {30,0.,70.};
    double set_j_muphi[3] = {30,-3.2,3.2};
    double set_j_muptrel[3] = {50,0.,4.};
    double set_j_svntrk[3] = {25,0.,25.};
@@ -31,7 +31,7 @@ namespace RANGE
    double set_j_jpaway[3] = {30,0.,1.6};
    double set_j_ptaway[3] = {25,0.,1.0};
    double set_j_etaaway[3] = {25,-3.0,3.0};
-   double set_j_hasmuon[3] = {2,-0.5,1.5};
+   double set_j_mass[3] = {25,0.,70.};
 
    double set_j_JP_nosel[17][3] = {
       {25,0.,2.5}, // nosel	 
@@ -134,18 +134,18 @@ namespace RANGE
    };
 
    double set_j_JP_COMMON[10][3] = {
-      {25,0.,2.5}, // nosel
-      {25,0.,1.7}, // pt20t30
-      {35,0.,1.9}, // pt30t50
-      {35,0.,2.1}, // pt50t70
-      {35,0.,2.2}, // pt70t100
-      {35,0.,2.3}, // pt100t140
-      {30,0.,2.4}, // pt140t200
-      {30,0.,2.5}, // pt200t300
-      {25,0.,2.6}, // pt300t670
-      {25,0.,2.7} // pt670t1000
+      {25,0.,2.0}, // nosel
+      {25,0.,2.0}, // pt0t70
+      {25,0.,2.0}, // pt70t150
+      {25,0.,2.0}, // pt150t200
+      {25,0.,2.0}, // pt200t250
+      {25,0.,2.0}, // pt250t300
+      {25,0.,2.0}, // pt300t350
+      {25,0.,2.0}, // pt350t400
+      {25,0.,2.0}, // pt300t600
+      {25,0.,2.0} // pt600t1000
    };
-
+   
 /*   double set_j_JP_COMMON[10][3] = {
       {20,0.5,2.5}, // nosel
       {20,0.5,1.7}, // pt20t30
@@ -207,7 +207,7 @@ namespace RANGE
       {25,0.,2.5}  // pt670t1000
    };*/
    
-   double set_j_mupt[17][3] = {
+/*   double set_j_mupt[17][3] = {
       {30,0.,110.}, // nosel	 
       {30,0.,25.}, // pt20t30
       {30,0.,25.}, // pt30t40
@@ -225,7 +225,7 @@ namespace RANGE
       {30,0.,110.}, // pt400t500
       {30,0.,110.}, // pt500t670
       {30,0.,110.}  // pt670t1000
-   };
+   };*/
    
    double set_j_2d_JP_vs_pt[6] = {
       25,0.,1.0,
