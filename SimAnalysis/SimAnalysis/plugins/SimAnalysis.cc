@@ -43,8 +43,7 @@ class SimAnalysis : public edm::EDAnalyzer
    virtual void endRun(const edm::Run&, const edm::EventSetup&) override;
 
    HepMC::GenParticle* GetMother(HepMC::GenParticle* part);
-   reco::GenParticle* GetMother(reco::GenParticle* part,
-				const std::vector<reco::GenParticle>* genParticles);
+   reco::GenParticle* GetMother(reco::GenParticle* part);
    
    edm::EDGetTokenT<std::vector<SimVertex> > simVerticesToken_;
    edm::EDGetTokenT<std::vector<SimTrack> > simTracksToken_;
@@ -106,7 +105,7 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
    
    const std::vector<SimVertex> &simVertices = *simVerticesHandle.product();
    const std::vector<SimTrack> &simTracks = *simTracksHandle.product();
-   const HepMC::GenEvent *hepMC = hepMCHandle->GetEvent();
+//   const HepMC::GenEvent *hepMC = hepMCHandle->GetEvent();
    const std::vector<reco::GenParticle> &genParticles = *genParticlesHandle.product();
 
    float primVtxX = genParticles[2].vertex().x();
@@ -125,7 +124,7 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	int genPartIdx = simTracks[it].genpartIndex();
 	int pdgIdG4 = simTracks[it].type();
 	
-	// non-generated muons
+	// simulated muons
 	if( genPartIdx == -1 && abs(pdgIdG4) == 13 )
 	  {
 	     float muSimPt = simTracks[it].momentum().pt();
@@ -161,122 +160,73 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 		       break;
 		    }		  
 	       }
-	  }	
+	  }
+     }   
 
-	// generated muons
-	if( genPartIdx != -1 )
-	  {
-	     HepMC::GenParticle* part = hepMC->barcode_to_particle(genPartIdx);
-	     
-	     int partId = part->pdg_id();
-	     float partPt = part->momentum().perp();
-	     
-//	     if( abs(partId) == 13 && partPt > 5. )
-	     if( abs(partId) == 13 )
-	       {
-		  float muPt = partPt;
-		  float muEta = part->momentum().eta();
-		  
-		  ftree->muPt.push_back(muPt);
-		  ftree->muEta.push_back(muEta);
-
-		  HepMC::GenParticle *mom = GetMother(part);
-
-		  int momId = mom->pdg_id();
-		  float momPt = mom->momentum().perp();
-		  float momEta = mom->momentum().eta();
-		  
-		  ftree->momId.push_back(momId);
-		  ftree->momPt.push_back(momPt);
-		  ftree->momEta.push_back(momEta);
-
-		  HepMC::GenVertex *vert = part->production_vertex();
-		  HepMC::ThreeVector p = vert->point3d();
-		  float muPosX = p.x();
-		  float muPosY = p.y();
-		  float muPosZ = p.z();
-		  float muR = p.r(); // in mm
-		  
-		  double muRpv = sqrt(pow(muPosX*mm-primVtxX,2)+
-				      pow(muPosY*mm-primVtxY,2)+
-				      pow(muPosZ*mm-primVtxZ,2));
-		  
-		  ftree->muR.push_back(muR);
-		  ftree->muRpv.push_back(muRpv);
-		  ftree->muPosX.push_back(muPosX);
-		  ftree->muPosY.push_back(muPosY);
-		  ftree->muPosZ.push_back(muPosZ);
-		  
-		  HepMC::GenParticle *momParton = mom;
-		  int qId = 666;
-		  while( abs(qId) >= 6 && abs(qId) != 21 )
-		    {
-		       HepMC::GenParticle *momIter = GetMother(momParton);
-		       qId = momIter->pdg_id();
-		       momParton = momIter;
-		    }
-		  
-		  int partonId = momParton->pdg_id();
-		  float partonPt = momParton->momentum().perp();
-		  float partonEta = momParton->momentum().eta();
-		  
-		  ftree->partonId.push_back(partonId);
-		  ftree->partonPt.push_back(partonPt);
-		  ftree->partonEta.push_back(partonEta);
-		  
-//		  const HepPDT::ParticleData* PData = pdt->particle(HepPDT::ParticleID(momId));
-//		  if( momId == 333 )
-//		    std::cout << PData->name() << " " << momId << std::endl;
-	       }	     
-	  }		  
-     }	     
-
-   // sanity check with GenParticles only
-/*   int nGenParticles = genParticles.size();
+   // generated muons
+   int nGenParticles = genParticles.size();
    for(int ip=0;ip<nGenParticles;ip++)
      {
-	reco::GenParticle gen = genParticles[ip];
-	
-	int genId = gen.pdgId();
-	float genPt = gen.pt();
-	
-//	if( abs(genId) == 13 && genPt > 5. )
-	if( abs(genId) == 13 )
-	  {
-	     float muPt = genPt;
-	     float muEta = gen.eta();
-		  
-	     ftree->muGenPt.push_back(muPt);
-	     ftree->muGenEta.push_back(muEta);
+	reco::GenParticle part = genParticles[ip];
 
-	     reco::GenParticle *mom = GetMother(&gen,&genParticles);
+	int partId = part.pdgId();
+	float partPt = part.pt();
 	     
+	if( abs(partId) == 13 )
+	  {
+	     float muPt = partPt;
+	     float muEta = part.eta();
+	     
+	     ftree->muPt.push_back(muPt);
+	     ftree->muEta.push_back(muEta);
+
+	     reco::GenParticle *mom = GetMother(&part);
+
 	     int momId = mom->pdgId();
 	     float momPt = mom->pt();
 	     float momEta = mom->eta();
-
-	     ftree->momGenId.push_back(momId);
-	     ftree->momGenPt.push_back(momPt);
-	     ftree->momGenEta.push_back(momEta);
 	     
+	     ftree->momId.push_back(momId);
+	     ftree->momPt.push_back(momPt);
+	     ftree->momEta.push_back(momEta);
+	     
+	     float muPosX = part.vx();
+	     float muPosY = part.vy();
+	     float muPosZ = part.vz();
+	     float muR = sqrt(muPosX*muPosX+muPosY*muPosY+muPosZ*muPosZ);
+	     
+	     double muRpv = sqrt(pow(muPosX*mm-primVtxX,2)+
+				 pow(muPosY*mm-primVtxY,2)+
+				 pow(muPosZ*mm-primVtxZ,2));
+	     
+	     ftree->muR.push_back(muR);
+	     ftree->muRpv.push_back(muRpv);
+	     ftree->muPosX.push_back(muPosX);
+	     ftree->muPosY.push_back(muPosY);
+	     ftree->muPosZ.push_back(muPosZ);
+
 	     reco::GenParticle *momParton = mom;
 	     int qId = 666;
 	     while( abs(qId) >= 6 && abs(qId) != 21 )
 	       {
-		  reco::GenParticle *momIter = GetMother(momParton,&genParticles);
+		  reco::GenParticle *momIter = GetMother(momParton);
 		  qId = momIter->pdgId();
 		  momParton = momIter;
 	       }
-
+	     
 	     int partonId = momParton->pdgId();
 	     float partonPt = momParton->pt();
 	     float partonEta = momParton->eta();
 	     
-	     ftree->partonGenId.push_back(partonId);
-	     ftree->partonGenPt.push_back(partonPt);
-	     ftree->partonGenEta.push_back(partonEta);
-	  }		
-     }*/
+	     ftree->partonId.push_back(partonId);
+	     ftree->partonPt.push_back(partonPt);
+	     ftree->partonEta.push_back(partonEta);
+	     
+//	     const HepPDT::ParticleData* PData = pdt->particle(HepPDT::ParticleID(momId));
+//	     if( momId == 333 )
+//	       std::cout << PData->name() << " " << momId << std::endl;*/
+	  }
+     }
    
    ftree->tree->Fill();
 }
@@ -298,14 +248,13 @@ HepMC::GenParticle* SimAnalysis::GetMother(HepMC::GenParticle* part)
    return part;
 }
 
-reco::GenParticle* SimAnalysis::GetMother(reco::GenParticle* part,
-					  const std::vector<reco::GenParticle>* genParticles)
+reco::GenParticle* SimAnalysis::GetMother(reco::GenParticle* part)
 {
    for( unsigned int j=0;j<part->numberOfMothers();++j )
      {
 	const reco::GenParticle *mom = dynamic_cast<const reco::GenParticle*>(part->mother(j));
 	reco::GenParticle *mother = const_cast<reco::GenParticle*>(mom);
-	if( mother->pdgId() == part->pdgId() ) return GetMother(mother,genParticles);
+	if( mother->pdgId() == part->pdgId() ) return GetMother(mother);
 	return mother;
      }	
    
