@@ -176,9 +176,11 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  {
 	     float muPt = partPt;
 	     float muEta = part.eta();
+	     int muStatus = part.status();
 	     
 	     ftree->muPt.push_back(muPt);
 	     ftree->muEta.push_back(muEta);
+	     ftree->muStatus.push_back(muStatus);
 
 	     reco::GenParticle *mom = GetMother(&part);
 
