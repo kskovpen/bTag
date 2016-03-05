@@ -40,6 +40,7 @@ class SimTree
    std::vector<float> muPosZ;
    std::vector<float> muPt;
    std::vector<float> muEta;
+   std::vector<int> muStatus;
 
    std::vector<float> muSimR;
    std::vector<float> muSimRpv;
