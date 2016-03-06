@@ -20,6 +20,7 @@
 #include "SimGeneral/HepPDTRecord/interface/ParticleDataTable.h"
 #include "SimDataFormats/Vertex/interface/SimVertex.h"
 #include "SimDataFormats/Track/interface/SimTrack.h"
+#include "SimDataFormats/Track/interface/SimTrackContainer.h"
 #include "SimDataFormats/GeneratorProducts/interface/HepMCProduct.h"
 
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
@@ -44,6 +45,7 @@ class SimAnalysis : public edm::EDAnalyzer
 
    HepMC::GenParticle* GetMother(HepMC::GenParticle* part);
    reco::GenParticle* GetMother(reco::GenParticle* part);
+   SimTrack* GetMother(SimTrack* part);
    
    edm::EDGetTokenT<std::vector<SimVertex> > simVerticesToken_;
    edm::EDGetTokenT<std::vector<SimTrack> > simTracksToken_;
@@ -51,6 +53,9 @@ class SimAnalysis : public edm::EDAnalyzer
    edm::EDGetTokenT<std::vector<reco::GenParticle> > genParticlesToken_;
    
    edm::ESHandle<HepPDT::ParticleDataTable> pdt;
+   
+   edm::Handle<std::vector<SimVertex> > simVerticesHandle;
+   edm::Handle<std::vector<SimTrack> > simTracksHandle;
    
    SimTree *ftree;
    
@@ -88,11 +93,9 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
    ftree->Init();
    
    // Sim Vertices
-   edm::Handle<std::vector<SimVertex> > simVerticesHandle;
    iEvent.getByToken(simVerticesToken_,simVerticesHandle);
 
    // Sim Tracks
-   edm::Handle<std::vector<SimTrack> > simTracksHandle;
    iEvent.getByToken(simTracksToken_,simTracksHandle);
 
    // Hep MC
@@ -121,23 +124,29 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
    for(int it=0;it<nTracks;it++)
      {
-	int genPartIdx = simTracks[it].genpartIndex();
-	int pdgIdG4 = simTracks[it].type();
+	SimTrack simTrk = simTracks[it];
+	
+	int genPartIdx = simTrk.genpartIndex();
+	int pdgIdG4 = simTrk.type();
 	
 	// simulated muons
 	if( genPartIdx == -1 && abs(pdgIdG4) == 13 )
 	  {
-	     float muSimPt = simTracks[it].momentum().pt();
-	     float muSimEta = simTracks[it].momentum().eta();
+	     float muSimPt = simTrk.momentum().pt();
+	     float muSimEta = simTrk.momentum().eta();
 	     
 	     ftree->muSimPt.push_back(muSimPt);
-	     ftree->muSimEta.push_back(muSimEta);	     	     
-	     
+	     ftree->muSimEta.push_back(muSimEta);
+
+	     SimTrack *mom = GetMother(&simTrk);
+	     int momId = mom->type();
+	     ftree->muSimMomId.push_back(momId);
+
 	     for(int iv=0;iv<nVertices;iv++)
 	       {
 		  int vertexIdx = simVertices[iv].vertexId();
 		  
-		  if( vertexIdx == simTracks[it].vertIndex() )
+		  if( vertexIdx == simTrk.vertIndex() )
 		    {
 		       SimVertex vert = simVertices[iv];
 		       
@@ -261,6 +270,30 @@ reco::GenParticle* SimAnalysis::GetMother(reco::GenParticle* part)
      }	
    
    return part;
+}
+
+SimTrack* SimAnalysis::GetMother(SimTrack* trk)
+{
+   if( trk->genpartIndex() == -1 )
+     {
+	if( trk->noVertex() ) return trk;
+	const SimVertex& vtx = (*simVerticesHandle)[trk->vertIndex()];
+	if( vtx.noParent() )  return trk;
+
+	for( edm::SimTrackContainer::const_iterator iter=simTracksHandle->begin();
+	     iter!=simTracksHandle->end();++iter )
+	  {
+	     if( (int)iter->trackId() == vtx.parentIndex() )
+	       {
+		  const SimTrack *mom = &(*iter);
+		  SimTrack *mother = const_cast<SimTrack*>(mom);		  
+		  if( mother->type() == trk->type() ) return GetMother(mother);
+		  return mother;
+	       }	     
+	  }
+     }	
+   
+   return trk;
 }
 
 void SimAnalysis::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup)
