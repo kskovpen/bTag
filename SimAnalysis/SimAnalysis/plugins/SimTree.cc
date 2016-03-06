@@ -19,6 +19,7 @@ void SimTree::Init()
    muEta.clear();
    muStatus.clear();
 
+   muSimMomId.clear();
    muSimPt.clear();
    muSimEta.clear();
    muSimR.clear();
@@ -62,6 +63,7 @@ void SimTree::CreateBranches(int buffersize = 32000)
    tree->Branch("muEta", "std::vector<float>", &muEta, buffersize);
    tree->Branch("muStatus", "std::vector<int>", &muStatus, buffersize);
 
+   tree->Branch("muSimMomId", "std::vector<int>", &muSimMomId, buffersize);
    tree->Branch("muSimR", "std::vector<float>", &muSimR, buffersize);
    tree->Branch("muSimRpv", "std::vector<float>", &muSimRpv, buffersize);
    tree->Branch("muSimPosX", "std::vector<float>", &muSimPosX, buffersize);
