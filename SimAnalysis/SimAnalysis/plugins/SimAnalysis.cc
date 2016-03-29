@@ -25,6 +25,11 @@
 
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 
+#include "DataFormats/JetReco/interface/PFJet.h"
+#include "DataFormats/MuonReco/interface/Muon.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
+
 #include "SimAnalysis/SimAnalysis/interface/SimTree.hh"
 
 class SimAnalysis : public edm::EDAnalyzer
@@ -51,11 +56,19 @@ class SimAnalysis : public edm::EDAnalyzer
    edm::EDGetTokenT<std::vector<SimTrack> > simTracksToken_;
    edm::EDGetTokenT<edm::HepMCProduct> hepMCToken_;
    edm::EDGetTokenT<std::vector<reco::GenParticle> > genParticlesToken_;
+   edm::EDGetTokenT<std::vector<reco::PFJet> > pfJetToken_;
+   edm::EDGetTokenT<std::vector<pat::Jet> > patJetToken_;
+   edm::EDGetTokenT<std::vector<reco::Muon> > recoMuonToken_;
+   edm::EDGetTokenT<std::vector<pat::Muon> > patMuonToken_;
    
    edm::ESHandle<HepPDT::ParticleDataTable> pdt;
    
    edm::Handle<std::vector<SimVertex> > simVerticesHandle;
    edm::Handle<std::vector<SimTrack> > simTracksHandle;
+   edm::Handle<std::vector<reco::PFJet> > pfJetHandle;
+   edm::Handle<std::vector<pat::Jet> > patJetHandle;
+   edm::Handle<std::vector<reco::Muon> > recoMuonHandle;
+   edm::Handle<std::vector<pat::Muon> > patMuonHandle;
    
    SimTree *ftree;
    
@@ -70,7 +83,11 @@ SimAnalysis::SimAnalysis(const edm::ParameterSet& iConfig)
    simTracksToken_    = consumes<std::vector<SimTrack> >(iConfig.getParameter<edm::InputTag>("simTracksInput"));
    hepMCToken_    = consumes<edm::HepMCProduct>(iConfig.getParameter<edm::InputTag>("hepMCInput"));
    genParticlesToken_    = consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("genParticlesInput"));
-
+   pfJetToken_    = consumes<std::vector<reco::PFJet> >(iConfig.getParameter<edm::InputTag>("pfJetInput"));
+   patJetToken_    = consumes<std::vector<pat::Jet> >(iConfig.getParameter<edm::InputTag>("patJetInput"));
+   recoMuonToken_    = consumes<std::vector<reco::Muon> >(iConfig.getParameter<edm::InputTag>("recoMuonInput"));
+   patMuonToken_    = consumes<std::vector<pat::Muon> >(iConfig.getParameter<edm::InputTag>("patMuonInput"));
+   
    TFile& f = fs->file();   
    f.SetCompressionAlgorithm(ROOT::kZLIB);
    f.SetCompressionLevel(9);
@@ -105,11 +122,27 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
    // Gen Particles
    edm::Handle<std::vector<reco::GenParticle> > genParticlesHandle;
    iEvent.getByToken(genParticlesToken_,genParticlesHandle);
+
+   // PF Jets
+   iEvent.getByToken(pfJetToken_,pfJetHandle);
+
+   // PAT Jets
+   iEvent.getByToken(patJetToken_,patJetHandle);
+
+   // PF Muons
+   iEvent.getByToken(recoMuonToken_,recoMuonHandle);
+
+   // PAT Muons
+   iEvent.getByToken(patMuonToken_,patMuonHandle);
    
    const std::vector<SimVertex> &simVertices = *simVerticesHandle.product();
    const std::vector<SimTrack> &simTracks = *simTracksHandle.product();
 //   const HepMC::GenEvent *hepMC = hepMCHandle->GetEvent();
    const std::vector<reco::GenParticle> &genParticles = *genParticlesHandle.product();
+   const std::vector<reco::PFJet> &pfJets = *pfJetHandle.product();
+   const std::vector<pat::Jet> &patJets = *patJetHandle.product();
+   const std::vector<reco::Muon> &recoMuons = *recoMuonHandle.product();
+   const std::vector<pat::Muon> &patMuons = *patMuonHandle.product();
 
    float primVtxX = genParticles[2].vertex().x();
    float primVtxY = genParticles[2].vertex().y();
@@ -121,6 +154,10 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
    
    int nVertices = simVertices.size();
    int nTracks = simTracks.size();
+   int nPFJets = pfJets.size();
+   int nPATJets = patJets.size();
+   int nRecoMuons = recoMuons.size();
+   int nPATMuons = patMuons.size();
 
    for(int it=0;it<nTracks;it++)
      {
@@ -134,9 +171,11 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  {
 	     float muSimPt = simTrk.momentum().pt();
 	     float muSimEta = simTrk.momentum().eta();
+	     float muSimPhi = simTrk.momentum().phi();
 	     
 	     ftree->muSimPt.push_back(muSimPt);
 	     ftree->muSimEta.push_back(muSimEta);
+	     ftree->muSimPhi.push_back(muSimPhi);
 
 	     SimTrack *mom = GetMother(&simTrk);
 	     int momId = mom->type();
@@ -185,10 +224,12 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  {
 	     float muPt = partPt;
 	     float muEta = part.eta();
+	     float muPhi = part.phi();
 	     int muStatus = part.status();
 	     
 	     ftree->muPt.push_back(muPt);
 	     ftree->muEta.push_back(muEta);
+	     ftree->muPhi.push_back(muPhi);
 	     ftree->muStatus.push_back(muStatus);
 
 	     reco::GenParticle *mom = GetMother(&part);
@@ -196,16 +237,18 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	     int momId = mom->pdgId();
 	     float momPt = mom->pt();
 	     float momEta = mom->eta();
+	     float momPhi = mom->phi();
 	     
 	     ftree->momId.push_back(momId);
 	     ftree->momPt.push_back(momPt);
 	     ftree->momEta.push_back(momEta);
+	     ftree->momPhi.push_back(momPhi);
 	     
 	     float muPosX = part.vx();
 	     float muPosY = part.vy();
 	     float muPosZ = part.vz();
 	     float muR = sqrt(muPosX*muPosX+muPosY*muPosY+muPosZ*muPosZ);
-	     
+
 	     double muRpv = sqrt(pow(muPosX*mm-primVtxX,2)+
 				 pow(muPosY*mm-primVtxY,2)+
 				 pow(muPosZ*mm-primVtxZ,2));
@@ -228,15 +271,77 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	     int partonId = momParton->pdgId();
 	     float partonPt = momParton->pt();
 	     float partonEta = momParton->eta();
+	     float partonPhi = momParton->phi();
 	     
 	     ftree->partonId.push_back(partonId);
 	     ftree->partonPt.push_back(partonPt);
 	     ftree->partonEta.push_back(partonEta);
+	     ftree->partonPhi.push_back(partonPhi);
 	     
 //	     const HepPDT::ParticleData* PData = pdt->particle(HepPDT::ParticleID(momId));
 //	     if( momId == 333 )
 //	       std::cout << PData->name() << " " << momId << std::endl;*/
 	  }
+     }
+   
+   // pf jets
+   for(int ij=0;ij<nPFJets;ij++)
+     {
+	reco::PFJet jet = pfJets[ij];
+	
+	float pt = jet.pt();
+	float eta = jet.eta();
+	float phi = jet.phi();
+	
+	ftree->pfjetPt.push_back(pt);
+	ftree->pfjetEta.push_back(eta);
+	ftree->pfjetPhi.push_back(phi);
+     }
+
+   // pat jets
+   for(int ij=0;ij<nPATJets;ij++)
+     {
+	pat::Jet jet = patJets[ij];
+	
+	float pt = jet.pt();
+	float eta = jet.eta();
+	float phi = jet.phi();
+	int pFlavour = jet.partonFlavour();
+	int hFlavour = jet.hadronFlavour();
+	
+	ftree->patjetPt.push_back(pt);
+	ftree->patjetEta.push_back(eta);
+	ftree->patjetPhi.push_back(phi);
+	ftree->patjetPartonFlavour.push_back(pFlavour);
+	ftree->patjetHadronFlavour.push_back(hFlavour);
+     }
+
+   // reco muons
+   for(int im=0;im<nRecoMuons;im++)
+     {
+	reco::Muon muon = recoMuons[im];
+	
+	float pt = muon.pt();
+	float eta = muon.eta();
+	float phi = muon.phi();
+	
+	ftree->recomuonPt.push_back(pt);
+	ftree->recomuonEta.push_back(eta);
+	ftree->recomuonPhi.push_back(phi);
+     }
+
+   // pat muons
+   for(int im=0;im<nPATMuons;im++)
+     {
+	pat::Muon muon = patMuons[im];
+	
+	float pt = muon.pt();
+	float eta = muon.eta();
+	float phi = muon.phi();
+	
+	ftree->patmuonPt.push_back(pt);
+	ftree->patmuonEta.push_back(eta);
+	ftree->patmuonPhi.push_back(phi);
      }
    
    ftree->tree->Fill();

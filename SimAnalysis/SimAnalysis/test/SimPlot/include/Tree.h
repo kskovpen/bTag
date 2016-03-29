@@ -22,6 +22,7 @@ public :
    std::vector<int>         *momId;
    std::vector<float>         *muPt;
    std::vector<float>         *muEta;
+   std::vector<float>         *muPhi;
    std::vector<int>         *muStatus;
    std::vector<int>         *partonId;
    
@@ -37,11 +38,18 @@ public :
    
    std::vector<float>         *muSimPt;
    std::vector<float>         *muSimEta;
+   std::vector<float>         *muSimPhi;
+   std::vector<int>           *muSimMomId;
+   
+   std::vector<float>         *recomuonPt;
+   std::vector<float>         *recomuonEta;
+   std::vector<float>         *recomuonPhi;
    
    // List of branches
    TBranch        *b_momId;
    TBranch        *b_muPt;
    TBranch        *b_muEta;
+   TBranch        *b_muPhi;
    TBranch        *b_muStatus;
    TBranch        *b_partonId;
    
@@ -57,6 +65,12 @@ public :
    
    TBranch        *b_muSimPt;
    TBranch        *b_muSimEta;
+   TBranch        *b_muSimPhi;
+   TBranch        *b_muSimMomId;
+   
+   TBranch        *b_recomuonPt;
+   TBranch        *b_recomuonEta;
+   TBranch        *b_recomuonPhi;
    
    Tree(TChain *ch=0,char* fname="physics.root",std::string treename="physics");
    virtual ~Tree();

@@ -17,41 +17,65 @@ void SIMPLOT::Origin::init()
    _fout->cd();
 
    h_mu1_id = new TH1F("h_mu1_id","h_mu1_id",7,0,7);
+   h_mu1_id->Sumw2();
    h_mu2_id = new TH1F("h_mu2_id","h_mu2_id",7,0,7);
+   h_mu2_id->Sumw2();
 
    h_mu1_partonId = new TH1F("h_mu1_partonId","h_mu1_partonId",4,0,4);
+   h_mu1_partonId->Sumw2();
    h_mu2_partonId = new TH1F("h_mu2_partonId","h_mu2_partonId",4,0,4);
+   h_mu2_partonId->Sumw2();
    
    h_mu1_pt = new TH1F("h_mu1_pt","h_mu1_pt",30,0,50);
+   h_mu1_pt->Sumw2();
    h_mu2_pt = new TH1F("h_mu2_pt","h_mu2_pt",30,0,50);
+   h_mu2_pt->Sumw2();
 
    h_muAll1_pt = new TH1F("h_muAll1_pt","h_muAll1_pt",30,0,50);
+   h_muAll1_pt->Sumw2();
    h_muAll2_pt = new TH1F("h_muAll2_pt","h_muAll2_pt",30,0,50);
+   h_muAll2_pt->Sumw2();
    
-   h_mu1_rpv = new TH1F("h_mu1_rpv","h_mu1_rpv",30,0,65);
-   h_mu2_rpv = new TH1F("h_mu2_rpv","h_mu2_rpv",30,0,65);
+   h_mu1_rpv = new TH1F("h_mu1_rpv","h_mu1_rpv",30,0,650);
+   h_mu1_rpv->Sumw2();
+   h_mu2_rpv = new TH1F("h_mu2_rpv","h_mu2_rpv",30,0,650);
+   h_mu2_rpv->Sumw2();
 //   h_mu1_rpv = new TH1F("h_mu1_rpv","h_mu1_rpv",30,0,300);
 //   h_mu2_rpv = new TH1F("h_mu2_rpv","h_mu2_rpv",30,0,300);
    
    h_muSim1_pt = new TH1F("h_muSim1_pt","h_muSim1_pt",30,0,50);
+   h_muSim1_pt->Sumw2();
    h_muSim2_pt = new TH1F("h_muSim2_pt","h_muSim2_pt",30,0,50);
+   h_muSim2_pt->Sumw2();
 
-   h_mu1_RhoPhi = new TH2F("h_mu1_RhoPhi","h_mu1_RhoPhi",100,-25.,25.,100,-25.,25.);
-   h_mu2_RhoPhi = new TH2F("h_mu2_RhoPhi","h_mu2_RhoPhi",100,-25.,25.,100,-25.,25.);
+   h_muRec1_pt = new TH1F("h_muRec1_pt","h_muRec1_pt",30,0,50);
+   h_muRec1_pt->Sumw2();
+   h_muRec2_pt = new TH1F("h_muRec2_pt","h_muRec2_pt",30,0,50);
+   h_muRec2_pt->Sumw2();
+   
+   h_mu1_RhoPhi = new TH2F("h_mu1_RhoPhi","h_mu1_RhoPhi",100,-250.,250.,100,-250.,250.);
+   h_mu1_RhoPhi->Sumw2();
+   h_mu2_RhoPhi = new TH2F("h_mu2_RhoPhi","h_mu2_RhoPhi",100,-250.,250.,100,-250.,250.);
+   h_mu2_RhoPhi->Sumw2();
 //   h_mu1_RhoPhi = new TH2F("h_mu1_RhoPhi","h_mu1_RhoPhi",100,-200.,200.,100,-200.,200.);
 //   h_mu2_RhoPhi = new TH2F("h_mu2_RhoPhi","h_mu2_RhoPhi",100,-200.,200.,100,-200.,200.);
 
-   h_muSim1_RhoPhi = new TH2F("h_muSim1_RhoPhi","h_muSim1_RhoPhi",100,-25.,25.,100,-25.,25.);
-   h_muSim2_RhoPhi = new TH2F("h_muSim2_RhoPhi","h_muSim2_RhoPhi",100,-25.,25.,100,-25.,25.);
+   h_muSim1_RhoPhi = new TH2F("h_muSim1_RhoPhi","h_muSim1_RhoPhi",100,-250.,250.,100,-250.,250.);
+   h_muSim1_RhoPhi->Sumw2();
+   h_muSim2_RhoPhi = new TH2F("h_muSim2_RhoPhi","h_muSim2_RhoPhi",100,-250.,250.,100,-250.,250.);
+   h_muSim2_RhoPhi->Sumw2();
 //   h_muSim1_RhoPhi = new TH2F("h_muSim1_RhoPhi","h_muSim1_RhoPhi",100,-200.,200.,100,-200.,200.);
 //   h_muSim2_RhoPhi = new TH2F("h_muSim2_RhoPhi","h_muSim2_RhoPhi",100,-200.,200.,100,-200.,200.);
 
-   h_muSim1_rpv = new TH1F("h_muSim1_rpv","h_muSim1_rpv",30,0,65);
-   h_muSim2_rpv = new TH1F("h_muSim2_rpv","h_muSim2_rpv",30,0,65);
+   h_muSim1_rpv = new TH1F("h_muSim1_rpv","h_muSim1_rpv",30,0,650);
+   h_muSim1_rpv->Sumw2();
+   h_muSim2_rpv = new TH1F("h_muSim2_rpv","h_muSim2_rpv",30,0,650);
+   h_muSim2_rpv->Sumw2();
 //   h_muSim1_rpv = new TH1F("h_muSim1_rpv","h_muSim1_rpv",30,0,300);
 //   h_muSim2_rpv = new TH1F("h_muSim2_rpv","h_muSim2_rpv",30,0,300);
    
    h_punchThroughEff = new TH1F("h_punchThroughEff","h_punchThroughEff",2,0,2);
+   h_punchThroughEff->Sumw2();
 }
 
 void SIMPLOT::Origin::fill()
@@ -59,6 +83,7 @@ void SIMPLOT::Origin::fill()
    std::vector<int> *momId = ntP->momId;
    std::vector<float> *muPt = ntP->muPt;
    std::vector<float> *muEta = ntP->muEta;
+   std::vector<float> *muPhi = ntP->muPhi;
    std::vector<int> *muStatus = ntP->muStatus;
    std::vector<int> *partonId = ntP->partonId;
    std::vector<float> *muPosX = ntP->muPosX;
@@ -72,6 +97,12 @@ void SIMPLOT::Origin::fill()
    std::vector<float> *muSimRpv = ntP->muSimRpv;
    std::vector<float> *muSimPt = ntP->muSimPt;
    std::vector<float> *muSimEta = ntP->muSimEta;
+   std::vector<float> *muSimPhi = ntP->muSimPhi;
+   std::vector<int> *muSimMomId = ntP->muSimMomId;
+   
+   std::vector<float> *muRecPt = ntP->recomuonPt;
+   std::vector<float> *muRecEta = ntP->recomuonEta;
+   std::vector<float> *muRecPhi = ntP->recomuonPhi;
 
 //   float w = 139803000.*0.01182/3233125.; // 30-50 Mu-enriched
 //   float w = 139803000./1176575.; // 30-50 Inclusive
@@ -79,10 +110,10 @@ void SIMPLOT::Origin::fill()
 //   float w = 19222500./4447180.; // 50-80 Inclusive
 //   float w = 2758420.*0.03844/970870.; // 80-120 Mu-enriched
 //   float w = 2758420./1171567.; // 80-120 Inclusive
-//   float w = 469797.*0.05362/551131.; // 120-170 Mu-enriched
+   float w = 469797.*0.05362/551131.; // 120-170 Mu-enriched
 //   float w = 469797./874927.; // 120-170 Inclusive
 //   float w = 117989.*0.07335/642597.; // 170-300 Mu-enriched
-   float w = 117989./656676.; // 170-300 Inclusive
+//   float w = 117989./656676.; // 170-300 Inclusive
 //   float w = 7820.25*0.10196/607320.; // 300-470 Mu-enriched
 //   float w = 7820.25/572832.; // 300-470 Inclusive
 //   float w = 645.528*0.12242/371887.; // 470-600 Mu-enriched
@@ -91,26 +122,31 @@ void SIMPLOT::Origin::fill()
 //   float w = 187.109/307380.; // 600-800 Inclusive
 //   float w = 32.3486*0.14552/265299.; // 800-1000 Mu-enriched
 //   float w = 32.3486/293480.; // 800-1000 Inclusive
+
+//   float w = 117989.*0.07335/546841.; // 170-300 Mu-enriched
+//   float w = 117989./518481.; // 170-300 Inclusive
    
    float ptCut = 5.;
    
    int nMu = momId->size();
    int nMuSim = muSimPt->size();
+   int nMuRec = muRecPt->size();
 
    std::vector<int> muonGen;
    std::vector<int> muonSim;
+   std::vector<int> muonRec;
    
    for(int im=0;im<nMu;im++)
      {
 	int pId = partonId->at(im);
 	int iBinParton = partonIdLabel(pId);
 //	if( iBinParton != 1 && iBinParton != 0 ) continue;
-	if( iBinParton != 3 ) continue;
+//	if( iBinParton != 3 ) continue;
 	float muonPt = muPt->at(im);
 	float muonEta = muEta->at(im);
 	int muonStatus = muStatus->at(im);
 	if( muonStatus != 1 ) continue;
-	if( muonPt < 5. || fabs(muonEta) > 2.5 ) continue;	
+	if( muonPt < ptCut || fabs(muonEta) > 2.5 ) continue;	
 	muonGen.push_back(im);
      }
 
@@ -118,10 +154,21 @@ void SIMPLOT::Origin::fill()
      {
 	float muonPt = muSimPt->at(im);
 	float muonEta = muSimEta->at(im);
-	if( muonPt < 5. || fabs(muonEta) > 2.5 ) continue;
+//	int momId = muSimMomId->at(im);
+//	int iBin = pdgIdLabel(momId);
+//	if( iBin == 0 || iBin == 1 ) continue;
+	if( muonPt < ptCut || fabs(muonEta) > 2.5 ) continue;
 	muonSim.push_back(im);
      }
 
+   for(int im=0;im<nMuRec;im++)
+     {
+	float muonPt = muRecPt->at(im);
+	float muonEta = muRecEta->at(im);
+	if( muonPt < ptCut || fabs(muonEta) > 2.5 ) continue;
+	muonRec.push_back(im);
+     }
+   
    if( muonSim.size() > 0 )
      {	
 	if( muonGen.size() > 0 ) h_punchThroughEff->Fill(1);
@@ -130,6 +177,7 @@ void SIMPLOT::Origin::fill()
    
    int nMuSel = muonGen.size();
    int nMuSimSel = muonSim.size();
+   int nMuRecSel = muonRec.size();
 
    if( nMuSel >= 1 ) nSel++;
    
@@ -140,11 +188,11 @@ void SIMPLOT::Origin::fill()
 	float muonPt = muPt->at(idxGen);
 	int muId = momId->at(idxGen);
 	int pId = partonId->at(idxGen);
-	
-	float muonPosX = muPosX->at(idxGen)/10.;
-	float muonPosY = muPosY->at(idxGen)/10.;
-	float muonPosZ = muPosZ->at(idxGen)/10.;
-	float muonRpv = muRpv->at(idxGen)/10.;
+
+	float muonPosX = muPosX->at(idxGen);
+	float muonPosY = muPosY->at(idxGen);
+	float muonPosZ = muPosZ->at(idxGen);
+	float muonRpv = muRpv->at(idxGen);
 	
 	int iBin = pdgIdLabel(muId);
 	int iBinParton = partonIdLabel(pId);
@@ -175,10 +223,10 @@ void SIMPLOT::Origin::fill()
 	  
 	float muonPt = muSimPt->at(idxSim);
 
-	float muonPosX = muSimPosX->at(idxSim)/10.;
-	float muonPosY = muSimPosY->at(idxSim)/10.;
-	float muonPosZ = muSimPosZ->at(idxSim)/10.;
-	float muonRpv = muSimRpv->at(idxSim)/10.;
+	float muonPosX = muSimPosX->at(idxSim);
+	float muonPosY = muSimPosY->at(idxSim);
+	float muonPosZ = muSimPosZ->at(idxSim);
+	float muonRpv = muSimRpv->at(idxSim);
 	
 	if( nMuSimSel >= 1 )
 	  {
@@ -194,6 +242,34 @@ void SIMPLOT::Origin::fill()
 	     h_muSim2_rpv->Fill(muonRpv,w);
 	     h_muSim2_RhoPhi->Fill(muonPosX,muonPosY,w);
 	  }
+     }   
+
+   for(int im=0;im<nMuRecSel;im++)
+     {
+	int idxRec = muonRec[im];
+	
+/*	float muonPt = muRecPt->at(idxRec);
+	float muonEta = muRecEta->at(idxRec);
+	float muonPhi = muRecPhi->at(idxRec);
+
+	for(int img=0;img<nMuSel;img++)
+	  {
+	     int idxGen = muonGen[img];
+	     float muGenEta = muEta->at(idxGen);
+	     float muGenPhi = muPhi->at(idxGen);
+	     
+	     float dr = DeltaR(muGenEta,muGenPhi,muonEta,muonPhi);
+	     std::cout << dr << std::endl;
+	  }
+	
+	if( nMuRecSel >= 1 )
+	  {
+	     h_muRec1_pt->Fill(muonPt,w);
+	  }
+	if( nMuRecSel >= 2 )
+	  {
+	     h_muRec2_pt->Fill(muonPt,w);
+	  }*/
      }   
    
 }
@@ -261,4 +337,11 @@ int SIMPLOT::Origin::partonIdLabel(int partonId)
      }   
 
    return iBin;
+}
+
+float SIMPLOT::Origin::DeltaR(float eta1,float phi1,float eta2,float phi2)
+{
+   float DeltaPhi = TMath::Abs(phi2 - phi1);
+   if (DeltaPhi > 3.141593 ) DeltaPhi -= 2.*3.141593;
+   return TMath::Sqrt( (eta2-eta1)*(eta2-eta1) + DeltaPhi*DeltaPhi );
 }

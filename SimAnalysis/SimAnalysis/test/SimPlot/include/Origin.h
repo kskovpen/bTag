@@ -21,6 +21,8 @@ namespace SIMPLOT
 	int pdgIdLabel(int pdgId);
 	int partonIdLabel(int partonId);
 	
+	float DeltaR(float eta1,float phi1,float eta2,float phi2);
+	
       private:
 	
 	TFile *_fout;
@@ -53,6 +55,9 @@ namespace SIMPLOT
 	TH1F *h_muSim2_rpv;
 	
 	TH1F *h_punchThroughEff;
+
+	TH1F *h_muRec1_pt;
+	TH1F *h_muRec2_pt;	
      };
 }
 

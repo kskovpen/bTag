@@ -9,6 +9,7 @@ void SimTree::Init()
    momId.clear();
    momPt.clear();
    momEta.clear();
+   momPhi.clear();
    
    muR.clear();
    muRpv.clear();
@@ -17,11 +18,13 @@ void SimTree::Init()
    muPosZ.clear();
    muPt.clear();
    muEta.clear();
+   muPhi.clear();
    muStatus.clear();
 
    muSimMomId.clear();
    muSimPt.clear();
    muSimEta.clear();
+   muSimPhi.clear();
    muSimR.clear();
    muSimRpv.clear();
    muSimPosX.clear();
@@ -31,17 +34,25 @@ void SimTree::Init()
    partonId.clear();
    partonPt.clear();
    partonEta.clear();
-
-/*   momGenId.clear();
-   momGenPt.clear();
-   momGenEta.clear();
+   partonPhi.clear();
    
-   muGenPt.clear();
-   muGenEta.clear();
+   pfjetPt.clear();
+   pfjetEta.clear();
+   pfjetPhi.clear();
 
-   partonGenId.clear();
-   partonGenPt.clear();
-   partonGenEta.clear();*/
+   patjetPt.clear();
+   patjetEta.clear();
+   patjetPhi.clear();
+   patjetPartonFlavour.clear();
+   patjetHadronFlavour.clear();
+
+   recomuonPt.clear();
+   recomuonEta.clear();
+   recomuonPhi.clear();
+
+   patmuonPt.clear();
+   patmuonEta.clear();
+   patmuonPhi.clear();
 }
 
 void SimTree::CreateBranches(int buffersize = 32000)
@@ -53,6 +64,7 @@ void SimTree::CreateBranches(int buffersize = 32000)
    tree->Branch("momId", "std::vector<int>", &momId, buffersize);
    tree->Branch("momPt", "std::vector<float>", &momPt, buffersize);
    tree->Branch("momEta", "std::vector<float>", &momEta, buffersize);
+   tree->Branch("momPhi", "std::vector<float>", &momPhi, buffersize);
    
    tree->Branch("muR", "std::vector<float>", &muR, buffersize);
    tree->Branch("muRpv", "std::vector<float>", &muRpv, buffersize);
@@ -61,6 +73,7 @@ void SimTree::CreateBranches(int buffersize = 32000)
    tree->Branch("muPosZ", "std::vector<float>", &muPosZ, buffersize);
    tree->Branch("muPt", "std::vector<float>", &muPt, buffersize);
    tree->Branch("muEta", "std::vector<float>", &muEta, buffersize);
+   tree->Branch("muPhi", "std::vector<float>", &muPhi, buffersize);
    tree->Branch("muStatus", "std::vector<int>", &muStatus, buffersize);
 
    tree->Branch("muSimMomId", "std::vector<int>", &muSimMomId, buffersize);
@@ -71,19 +84,24 @@ void SimTree::CreateBranches(int buffersize = 32000)
    tree->Branch("muSimPosZ", "std::vector<float>", &muSimPosZ, buffersize);
    tree->Branch("muSimPt", "std::vector<float>", &muSimPt, buffersize);
    tree->Branch("muSimEta", "std::vector<float>", &muSimEta, buffersize);
+   tree->Branch("muSimPhi", "std::vector<float>", &muSimPhi, buffersize);
    
    tree->Branch("partonId", "std::vector<int>", &partonId, buffersize);
    tree->Branch("partonPt", "std::vector<float>", &partonPt, buffersize);
    tree->Branch("partonEta", "std::vector<float>", &partonEta, buffersize);
-
-/*   tree->Branch("momGenId", "std::vector<int>", &momGenId, buffersize);
-   tree->Branch("momGenPt", "std::vector<float>", &momGenPt, buffersize);
-   tree->Branch("momGenEta", "std::vector<float>", &momGenEta, buffersize);
+   tree->Branch("partonPhi", "std::vector<float>", &partonPhi, buffersize);
    
-   tree->Branch("muGenPt", "std::vector<float>", &muGenPt, buffersize);
-   tree->Branch("muGenEta", "std::vector<float>", &muGenEta, buffersize);
+   tree->Branch("pfjetPt", "std::vector<float>", &pfjetPt, buffersize);
+   tree->Branch("pfjetEta", "std::vector<float>", &pfjetEta, buffersize);
+   tree->Branch("pfjetPhi", "std::vector<float>", &pfjetPhi, buffersize);
 
-   tree->Branch("partonGenId", "std::vector<int>", &partonGenId, buffersize);
-   tree->Branch("partonGenPt", "std::vector<float>", &partonGenPt, buffersize);
-   tree->Branch("partonGenEta", "std::vector<float>", &partonGenEta, buffersize);*/
+   tree->Branch("patjetPt", "std::vector<float>", &patjetPt, buffersize);
+   tree->Branch("patjetEta", "std::vector<float>", &patjetEta, buffersize);
+   tree->Branch("patjetPhi", "std::vector<float>", &patjetPhi, buffersize);
+   tree->Branch("patjetPartonFlavour", "std::vector<int>", &patjetPartonFlavour, buffersize);
+   tree->Branch("patjetHadronFlavour", "std::vector<int>", &patjetHadronFlavour, buffersize);
+
+   tree->Branch("recomuonPt", "std::vector<float>", &recomuonPt, buffersize);
+   tree->Branch("recomuonEta", "std::vector<float>", &recomuonEta, buffersize);
+   tree->Branch("recomuonPhi", "std::vector<float>", &recomuonPhi, buffersize);
 }

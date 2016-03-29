@@ -57,6 +57,7 @@ void SIMPLOT::Tree::Init(TChain *tree)
    momId = 0;
    muPt = 0;
    muEta = 0;
+   muPhi = 0;
    muStatus = 0;
    partonId = 0;
 
@@ -72,10 +73,17 @@ void SIMPLOT::Tree::Init(TChain *tree)
    
    muSimPt = 0;
    muSimEta = 0;
+   muSimPhi = 0;
+   muSimMomId = 0;
+   
+   recomuonPt = 0;
+   recomuonEta = 0;
+   recomuonPhi = 0;
    
    fChain->SetBranchAddress("momId", &momId, &b_momId);
    fChain->SetBranchAddress("muPt", &muPt, &b_muPt);
    fChain->SetBranchAddress("muEta", &muEta, &b_muEta);
+   fChain->SetBranchAddress("muPhi", &muPhi, &b_muPhi);
    fChain->SetBranchAddress("muStatus", &muStatus, &b_muStatus);
    fChain->SetBranchAddress("partonId", &partonId, &b_partonId);
 
@@ -91,4 +99,10 @@ void SIMPLOT::Tree::Init(TChain *tree)
    
    fChain->SetBranchAddress("muSimPt", &muSimPt, &b_muSimPt);
    fChain->SetBranchAddress("muSimEta", &muSimEta, &b_muSimEta);
+   fChain->SetBranchAddress("muSimPhi", &muSimPhi, &b_muSimPhi);
+   fChain->SetBranchAddress("muSimMomId", &muSimMomId, &b_muSimMomId);
+   
+   fChain->SetBranchAddress("recomuonPt", &recomuonPt, &b_recomuonPt);
+   fChain->SetBranchAddress("recomuonEta", &recomuonEta, &b_recomuonEta);
+   fChain->SetBranchAddress("recomuonPhi", &recomuonPhi, &b_recomuonPhi);
 }
