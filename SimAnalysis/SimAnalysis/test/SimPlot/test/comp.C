@@ -26,73 +26,43 @@ void comp()
    leg->SetFillColor(253);
    leg->SetBorderSize(0);
 
-   std::string fpath = "plotIncl/";
-   std::string fpathMu = "plotMu/";
-   std::string histname = "h_mu2_pt";
+   std::string fpath = "histTEST_MERGED/QCD_Pt_120to170_TuneCUETP8M1_13TeV_pythia8/data.root";
+   std::string fpathMu = "histTEST_MERGED/QCD_Pt-120to170_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8/data.root";
+//   std::string histname = "h_mu1_partonId";
+   std::string histname = "h_muLJet1_pt";
    std::string histnameNorm = "h_mu2_id";
 
-   TFile *f[100];
-   TFile *fMu[100];
+   TFile *f;
+   TFile *fMu;
 
    TH1D *h;
    TH1D *hMu;
    TH1D *hNorm;
    TH1D *hMuNorm;
    
-   std::vector<std::string> hName;   
-   hName.push_back("output");
-   int nSamp_h = hName.size();
+   f = TFile::Open(fpath.c_str());
+   fMu = TFile::Open(fpathMu.c_str());
    
-   for(int i=0;i<nSamp_h;i++)
-     {
-	std::string fname = fpath+hName.at(i)+".root";
-	f[i] = TFile::Open(fname.c_str());
-     }
-
-   for(int i=0;i<nSamp_h;i++)
-     {
-	std::string fname = fpathMu+hName.at(i)+".root";
-	fMu[i] = TFile::Open(fname.c_str());
-     }
-   
-   for(int i=0;i<nSamp_h;i++)
      {	
-	TH1D *h_c = (TH1D*)f[i]->Get(histname.c_str());
+	TH1D *h_c = (TH1D*)f->Get(histname.c_str());
 	h_c->SetMarkerSize(0.0);
 
-	TH1D *hNorm_c = (TH1D*)f[i]->Get(histnameNorm.c_str());
+	TH1D *hNorm_c = (TH1D*)f->Get(histnameNorm.c_str());
 	hNorm_c->SetMarkerSize(0.0);
-	
-	if( i == 0 )
-	  {	     
-	     h = (TH1D*)h_c->Clone("h");
-	     hNorm = (TH1D*)hNorm_c->Clone("hNorm");
-	  }
-	else
-	  {
-	     h->Add(h_c);
-	     hNorm->Add(hNorm_c);
-	  }
+
+	h = (TH1D*)h_c->Clone("h");
+	hNorm = (TH1D*)hNorm_c->Clone("hNorm");
      }
 
-   for(int i=0;i<nSamp_h;i++)
      {	
-	TH1D *hMu_c = (TH1D*)fMu[i]->Get(histname.c_str());
+	TH1D *hMu_c = (TH1D*)fMu->Get(histname.c_str());
 	hMu_c->SetMarkerSize(0.0);
 
-	TH1D *hMuNorm_c = (TH1D*)fMu[i]->Get(histnameNorm.c_str());
+	TH1D *hMuNorm_c = (TH1D*)fMu->Get(histnameNorm.c_str());
 	hMuNorm_c->SetMarkerSize(0.0);
 	
-	if( i == 0 )
-	  {	     
-	     hMu = (TH1D*)hMu_c->Clone("hMu");
-	     hMuNorm = (TH1D*)hMuNorm_c->Clone("hMuNorm");
-	  }
-	else
-	  {
-	     hMu->Add(hMu_c);
-	     hMuNorm->Add(hMuNorm_c);
-	  }
+	hMu = (TH1D*)hMu_c->Clone("hMu");
+	hMuNorm = (TH1D*)hMuNorm_c->Clone("hMuNorm");
      }
    
    addbin(h);
@@ -104,9 +74,8 @@ void comp()
    double ihNorm = hNorm->Integral();
    double ihMu = hMu->Integral();   
    double ihMuNorm = hMuNorm->Integral();
-//   std::cout << ih << " " << ihMu << " " << ih/ihMu << std::endl;
 
-   std::cout << ihMu/ih << std::endl;
+   std::cout << ih/ihMu << std::endl;
    
 /*   double v1 = hNorm->GetBinContent(1)+
      hNorm->GetBinContent(2)+
