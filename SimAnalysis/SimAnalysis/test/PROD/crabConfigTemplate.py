@@ -18,6 +18,7 @@ config.Data.unitsPerJob = 5
 config.Data.splitting = 'FileBased'
 #config.Data.splitting = 'LumiBased'
 config.Data.publication = False
+config.Data.ignoreLocality = True
 config.Data.inputDataset = 'INPUTDATASET'
 #config.Data.inputDBS = 'phys03'
 config.Data.outputDatasetTag = 'PUBLISHDATANAME'
