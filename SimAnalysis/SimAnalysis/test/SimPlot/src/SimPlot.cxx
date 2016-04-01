@@ -4,19 +4,25 @@ char *fin;
 char *foutname;
 TChain *tr;
 int nSel;
+float noe;
+float xsec;
+float eff;
 
 SIMPLOT::Tree *ntP;
 
 int main(int argc, char *argv[])
 {
-   if( argc < 3 )
+   if( argc < 6 )
      {
-	std::cout << "Usage: ./simPlot [input file list] [output name]" << std::endl;
+	std::cout << "Usage: ./simPlot [input file list] [output name] [noe] [xsec] [eff]" << std::endl;
 	exit(1);
      }
    
    fin = argv[1];
    foutname = argv[2];
+   noe = atof(argv[3]);
+   xsec = atof(argv[4]);
+   eff = atof(argv[5]);
 
    std::cout << "Input file list: " << fin <<
      std::endl;

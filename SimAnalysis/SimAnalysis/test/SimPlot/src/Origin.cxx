@@ -40,8 +40,6 @@ void SIMPLOT::Origin::init()
    h_mu1_rpv->Sumw2();
    h_mu2_rpv = new TH1F("h_mu2_rpv","h_mu2_rpv",30,0,650);
    h_mu2_rpv->Sumw2();
-//   h_mu1_rpv = new TH1F("h_mu1_rpv","h_mu1_rpv",30,0,300);
-//   h_mu2_rpv = new TH1F("h_mu2_rpv","h_mu2_rpv",30,0,300);
    
    h_muSim1_pt = new TH1F("h_muSim1_pt","h_muSim1_pt",30,0,50);
    h_muSim1_pt->Sumw2();
@@ -57,25 +55,36 @@ void SIMPLOT::Origin::init()
    h_mu1_RhoPhi->Sumw2();
    h_mu2_RhoPhi = new TH2F("h_mu2_RhoPhi","h_mu2_RhoPhi",100,-250.,250.,100,-250.,250.);
    h_mu2_RhoPhi->Sumw2();
-//   h_mu1_RhoPhi = new TH2F("h_mu1_RhoPhi","h_mu1_RhoPhi",100,-200.,200.,100,-200.,200.);
-//   h_mu2_RhoPhi = new TH2F("h_mu2_RhoPhi","h_mu2_RhoPhi",100,-200.,200.,100,-200.,200.);
 
    h_muSim1_RhoPhi = new TH2F("h_muSim1_RhoPhi","h_muSim1_RhoPhi",100,-250.,250.,100,-250.,250.);
    h_muSim1_RhoPhi->Sumw2();
    h_muSim2_RhoPhi = new TH2F("h_muSim2_RhoPhi","h_muSim2_RhoPhi",100,-250.,250.,100,-250.,250.);
    h_muSim2_RhoPhi->Sumw2();
-//   h_muSim1_RhoPhi = new TH2F("h_muSim1_RhoPhi","h_muSim1_RhoPhi",100,-200.,200.,100,-200.,200.);
-//   h_muSim2_RhoPhi = new TH2F("h_muSim2_RhoPhi","h_muSim2_RhoPhi",100,-200.,200.,100,-200.,200.);
 
    h_muSim1_rpv = new TH1F("h_muSim1_rpv","h_muSim1_rpv",30,0,650);
    h_muSim1_rpv->Sumw2();
    h_muSim2_rpv = new TH1F("h_muSim2_rpv","h_muSim2_rpv",30,0,650);
    h_muSim2_rpv->Sumw2();
-//   h_muSim1_rpv = new TH1F("h_muSim1_rpv","h_muSim1_rpv",30,0,300);
-//   h_muSim2_rpv = new TH1F("h_muSim2_rpv","h_muSim2_rpv",30,0,300);
-   
-   h_punchThroughEff = new TH1F("h_punchThroughEff","h_punchThroughEff",2,0,2);
-   h_punchThroughEff->Sumw2();
+
+   h_muJet1_pt = new TH1F("h_muJet1_pt","h_muJet1_pt",30,0,300);
+   h_muJet1_pt->Sumw2();
+   h_muJet2_pt = new TH1F("h_muJet2_pt","h_muJet2_pt",30,0,300);
+   h_muJet2_pt->Sumw2();
+
+   h_muBJet1_pt = new TH1F("h_muBJet1_pt","h_muBJet1_pt",30,0,300);
+   h_muBJet1_pt->Sumw2();
+   h_muBJet2_pt = new TH1F("h_muBJet2_pt","h_muBJet2_pt",30,0,300);
+   h_muBJet2_pt->Sumw2();
+
+   h_muCJet1_pt = new TH1F("h_muCJet1_pt","h_muCJet1_pt",30,0,300);
+   h_muCJet1_pt->Sumw2();
+   h_muCJet2_pt = new TH1F("h_muCJet2_pt","h_muCJet2_pt",30,0,300);
+   h_muCJet2_pt->Sumw2();
+
+   h_muLJet1_pt = new TH1F("h_muLJet1_pt","h_muLJet1_pt",30,0,300);
+   h_muLJet1_pt->Sumw2();
+   h_muLJet2_pt = new TH1F("h_muLJet2_pt","h_muLJet2_pt",30,0,300);
+   h_muLJet2_pt->Sumw2();
 }
 
 void SIMPLOT::Origin::fill()
@@ -104,37 +113,25 @@ void SIMPLOT::Origin::fill()
    std::vector<float> *muRecEta = ntP->recomuonEta;
    std::vector<float> *muRecPhi = ntP->recomuonPhi;
 
-//   float w = 139803000.*0.01182/3233125.; // 30-50 Mu-enriched
-//   float w = 139803000./1176575.; // 30-50 Inclusive
-//   float w = 19222500.*0.02276/1405153.; // 50-80 Mu-enriched
-//   float w = 19222500./4447180.; // 50-80 Inclusive
-//   float w = 2758420.*0.03844/970870.; // 80-120 Mu-enriched
-//   float w = 2758420./1171567.; // 80-120 Inclusive
-   float w = 469797.*0.05362/551131.; // 120-170 Mu-enriched
-//   float w = 469797./874927.; // 120-170 Inclusive
-//   float w = 117989.*0.07335/642597.; // 170-300 Mu-enriched
-//   float w = 117989./656676.; // 170-300 Inclusive
-//   float w = 7820.25*0.10196/607320.; // 300-470 Mu-enriched
-//   float w = 7820.25/572832.; // 300-470 Inclusive
-//   float w = 645.528*0.12242/371887.; // 470-600 Mu-enriched
-//   float w = 645.528/292410.; // 470-600 Inclusive
-//   float w = 187.109*0.13412/334973.; // 600-800 Mu-enriched
-//   float w = 187.109/307380.; // 600-800 Inclusive
-//   float w = 32.3486*0.14552/265299.; // 800-1000 Mu-enriched
-//   float w = 32.3486/293480.; // 800-1000 Inclusive
-
-//   float w = 117989.*0.07335/546841.; // 170-300 Mu-enriched
-//   float w = 117989./518481.; // 170-300 Inclusive
+   std::vector<float> *patjetPt = ntP->patjetPt;
+   std::vector<float> *patjetEta = ntP->patjetEta;
+   std::vector<float> *patjetPhi = ntP->patjetPhi;
+   std::vector<int> *patjetPartonFlavour = ntP->patjetPartonFlavour;
+   std::vector<int> *patjetHadronFlavour = ntP->patjetHadronFlavour;
+   
+   float w = xsec*eff/noe;
    
    float ptCut = 5.;
    
    int nMu = momId->size();
    int nMuSim = muSimPt->size();
    int nMuRec = muRecPt->size();
+   int nJet = patjetPt->size();
 
    std::vector<int> muonGen;
    std::vector<int> muonSim;
    std::vector<int> muonRec;
+   std::vector<int> mujet;
    
    for(int im=0;im<nMu;im++)
      {
@@ -168,16 +165,31 @@ void SIMPLOT::Origin::fill()
 	if( muonPt < ptCut || fabs(muonEta) > 2.5 ) continue;
 	muonRec.push_back(im);
      }
-   
-   if( muonSim.size() > 0 )
-     {	
-	if( muonGen.size() > 0 ) h_punchThroughEff->Fill(1);
-	else h_punchThroughEff->Fill(0);
-     }  
+
+   for(int ij=0;ij<nJet;ij++)
+     {
+	float jetPt = patjetPt->at(ij);
+	float jetEta = patjetEta->at(ij);
+	float jetPhi = patjetPhi->at(ij);
+	if( jetPt < 30. || fabs(jetEta) > 2.4 ) continue;
+
+	bool foundInJetMuon = 0;
+	for(int im=0;im<muonRec.size();im++)
+	  {
+	     float dr = DeltaR(jetEta,jetPhi,muRecEta->at(muonRec[im]),muRecPhi->at(muonRec[im]));
+	     if( dr < 0.4 )
+	       {		  
+		  foundInJetMuon = 1;
+		  break;
+	       }	     
+	  }		
+	if( foundInJetMuon ) mujet.push_back(ij);
+     }
    
    int nMuSel = muonGen.size();
    int nMuSimSel = muonSim.size();
    int nMuRecSel = muonRec.size();
+   int nMuJet = mujet.size();
 
    if( nMuSel >= 1 ) nSel++;
    
@@ -270,6 +282,29 @@ void SIMPLOT::Origin::fill()
 	  {
 	     h_muRec2_pt->Fill(muonPt,w);
 	  }*/
+     }   
+
+   for(int ij=0;ij<nMuJet;ij++)
+     {
+	int idxMuJet = mujet[ij];
+	  
+	float jetPt = patjetPt->at(idxMuJet);
+	int jetHadronFlavour = patjetHadronFlavour->at(idxMuJet);
+	
+	if( nMuJet >= 1 )
+	  {
+	     h_muJet1_pt->Fill(jetPt,w);
+	     if( jetHadronFlavour == 5 ) h_muBJet1_pt->Fill(jetPt,w);
+	     else if( jetHadronFlavour == 4 ) h_muCJet1_pt->Fill(jetPt,w);
+	     else h_muLJet1_pt->Fill(jetPt,w);
+	  }
+	if( nMuJet >= 2 )
+	  {
+	     h_muJet2_pt->Fill(jetPt,w);
+	     if( jetHadronFlavour == 5 ) h_muBJet2_pt->Fill(jetPt,w);
+	     else if( jetHadronFlavour == 4 ) h_muCJet2_pt->Fill(jetPt,w);
+	     else h_muLJet2_pt->Fill(jetPt,w);
+	  }
      }   
    
 }
