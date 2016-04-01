@@ -30,4 +30,8 @@ extern SIMPLOT::Tree *ntP;
 
 extern int nSel;
 
+extern float noe;
+extern float xsec;
+extern float eff;
+
 #endif

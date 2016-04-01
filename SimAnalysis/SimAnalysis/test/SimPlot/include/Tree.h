@@ -44,6 +44,12 @@ public :
    std::vector<float>         *recomuonPt;
    std::vector<float>         *recomuonEta;
    std::vector<float>         *recomuonPhi;
+
+   std::vector<float>         *patjetPt;
+   std::vector<float>         *patjetEta;
+   std::vector<float>         *patjetPhi;
+   std::vector<int>           *patjetPartonFlavour;
+   std::vector<int>           *patjetHadronFlavour;
    
    // List of branches
    TBranch        *b_momId;
@@ -71,6 +77,12 @@ public :
    TBranch        *b_recomuonPt;
    TBranch        *b_recomuonEta;
    TBranch        *b_recomuonPhi;
+
+   TBranch        *b_patjetPt;
+   TBranch        *b_patjetEta;
+   TBranch        *b_patjetPhi;
+   TBranch        *b_patjetPartonFlavour;
+   TBranch        *b_patjetHadronFlavour;
    
    Tree(TChain *ch=0,char* fname="physics.root",std::string treename="physics");
    virtual ~Tree();

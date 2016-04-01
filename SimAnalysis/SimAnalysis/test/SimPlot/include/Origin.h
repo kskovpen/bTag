@@ -57,7 +57,19 @@ namespace SIMPLOT
 	TH1F *h_punchThroughEff;
 
 	TH1F *h_muRec1_pt;
-	TH1F *h_muRec2_pt;	
+	TH1F *h_muRec2_pt;
+
+	TH1F *h_muJet1_pt;
+	TH1F *h_muJet2_pt;	
+
+	TH1F *h_muBJet1_pt;
+	TH1F *h_muBJet2_pt;	
+
+	TH1F *h_muCJet1_pt;
+	TH1F *h_muCJet2_pt;	
+
+	TH1F *h_muLJet1_pt;
+	TH1F *h_muLJet2_pt;	
      };
 }
 
