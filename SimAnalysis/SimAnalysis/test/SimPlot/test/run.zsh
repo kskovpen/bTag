@@ -18,5 +18,5 @@ do
 
 fout="${runName}/output"
 
-.././SimPlot ${line} ${fout}
+.././SimPlot ${line} ${fout} 1 1 1
 done
