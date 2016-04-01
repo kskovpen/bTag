@@ -71,6 +71,8 @@ class SimAnalysis : public edm::EDAnalyzer
    edm::Handle<std::vector<pat::Muon> > patMuonHandle;
    
    SimTree *ftree;
+
+   bool runOnRECO_;
    
    TH1F *hcount;
    
@@ -87,6 +89,8 @@ SimAnalysis::SimAnalysis(const edm::ParameterSet& iConfig)
    patJetToken_    = consumes<std::vector<pat::Jet> >(iConfig.getParameter<edm::InputTag>("patJetInput"));
    recoMuonToken_    = consumes<std::vector<reco::Muon> >(iConfig.getParameter<edm::InputTag>("recoMuonInput"));
    patMuonToken_    = consumes<std::vector<pat::Muon> >(iConfig.getParameter<edm::InputTag>("patMuonInput"));
+
+   runOnRECO_ = iConfig.getParameter<bool>("runOnRECO");
    
    TFile& f = fs->file();   
    f.SetCompressionAlgorithm(ROOT::kZLIB);
@@ -123,26 +127,27 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
    edm::Handle<std::vector<reco::GenParticle> > genParticlesHandle;
    iEvent.getByToken(genParticlesToken_,genParticlesHandle);
 
-   // PF Jets
-   iEvent.getByToken(pfJetToken_,pfJetHandle);
+   if( runOnRECO_ )
+     {	
+	// PF Jets
+	iEvent.getByToken(pfJetToken_,pfJetHandle);
+	
+	// PAT Jets
+	iEvent.getByToken(patJetToken_,patJetHandle);
 
-   // PAT Jets
-   iEvent.getByToken(patJetToken_,patJetHandle);
+	// PF Muons
+	iEvent.getByToken(recoMuonToken_,recoMuonHandle);
 
-   // PF Muons
-   iEvent.getByToken(recoMuonToken_,recoMuonHandle);
+	// PAT Muons
+	iEvent.getByToken(patMuonToken_,patMuonHandle);
+     }   
 
-   // PAT Muons
-   iEvent.getByToken(patMuonToken_,patMuonHandle);
+   // GEN-SIM specific data
    
    const std::vector<SimVertex> &simVertices = *simVerticesHandle.product();
    const std::vector<SimTrack> &simTracks = *simTracksHandle.product();
 //   const HepMC::GenEvent *hepMC = hepMCHandle->GetEvent();
    const std::vector<reco::GenParticle> &genParticles = *genParticlesHandle.product();
-   const std::vector<reco::PFJet> &pfJets = *pfJetHandle.product();
-   const std::vector<pat::Jet> &patJets = *patJetHandle.product();
-   const std::vector<reco::Muon> &recoMuons = *recoMuonHandle.product();
-   const std::vector<pat::Muon> &patMuons = *patMuonHandle.product();
 
    float primVtxX = genParticles[2].vertex().x();
    float primVtxY = genParticles[2].vertex().y();
@@ -154,10 +159,6 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
    
    int nVertices = simVertices.size();
    int nTracks = simTracks.size();
-   int nPFJets = pfJets.size();
-   int nPATJets = patJets.size();
-   int nRecoMuons = recoMuons.size();
-   int nPATMuons = patMuons.size();
 
    for(int it=0;it<nTracks;it++)
      {
@@ -283,66 +284,81 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 //	       std::cout << PData->name() << " " << momId << std::endl;*/
 	  }
      }
+
+   // RECO specific data
    
-   // pf jets
-   for(int ij=0;ij<nPFJets;ij++)
-     {
-	reco::PFJet jet = pfJets[ij];
-	
-	float pt = jet.pt();
-	float eta = jet.eta();
-	float phi = jet.phi();
-	
-	ftree->pfjetPt.push_back(pt);
-	ftree->pfjetEta.push_back(eta);
-	ftree->pfjetPhi.push_back(phi);
-     }
+   if( runOnRECO_ )
+     {	
+	const std::vector<reco::PFJet> &pfJets = *pfJetHandle.product();
+	const std::vector<pat::Jet> &patJets = *patJetHandle.product();
+	const std::vector<reco::Muon> &recoMuons = *recoMuonHandle.product();
+	const std::vector<pat::Muon> &patMuons = *patMuonHandle.product();
 
-   // pat jets
-   for(int ij=0;ij<nPATJets;ij++)
-     {
-	pat::Jet jet = patJets[ij];
+	int nPFJets = pfJets.size();
+	int nPATJets = patJets.size();
+	int nRecoMuons = recoMuons.size();
+	int nPATMuons = patMuons.size();
 	
-	float pt = jet.pt();
-	float eta = jet.eta();
-	float phi = jet.phi();
-	int pFlavour = jet.partonFlavour();
-	int hFlavour = jet.hadronFlavour();
+	// pf jets
+	for(int ij=0;ij<nPFJets;ij++)
+	  {
+	     reco::PFJet jet = pfJets[ij];
+	     
+	     float pt = jet.pt();
+	     float eta = jet.eta();
+	     float phi = jet.phi();
+	     
+	     ftree->pfjetPt.push_back(pt);
+	     ftree->pfjetEta.push_back(eta);
+	     ftree->pfjetPhi.push_back(phi);
+	  }
 	
-	ftree->patjetPt.push_back(pt);
-	ftree->patjetEta.push_back(eta);
-	ftree->patjetPhi.push_back(phi);
-	ftree->patjetPartonFlavour.push_back(pFlavour);
-	ftree->patjetHadronFlavour.push_back(hFlavour);
-     }
-
-   // reco muons
-   for(int im=0;im<nRecoMuons;im++)
-     {
-	reco::Muon muon = recoMuons[im];
+	// pat jets
+	for(int ij=0;ij<nPATJets;ij++)
+	  {
+	     pat::Jet jet = patJets[ij];
+	     
+	     float pt = jet.pt();
+	     float eta = jet.eta();
+	     float phi = jet.phi();
+	     int pFlavour = jet.partonFlavour();
+	     int hFlavour = jet.hadronFlavour();
+	     
+	     ftree->patjetPt.push_back(pt);
+	     ftree->patjetEta.push_back(eta);
+	     ftree->patjetPhi.push_back(phi);
+	     ftree->patjetPartonFlavour.push_back(pFlavour);
+	     ftree->patjetHadronFlavour.push_back(hFlavour);
+	  }
 	
-	float pt = muon.pt();
-	float eta = muon.eta();
-	float phi = muon.phi();
+	// reco muons
+	for(int im=0;im<nRecoMuons;im++)
+	  {
+	     reco::Muon muon = recoMuons[im];
+	     
+	     float pt = muon.pt();
+	     float eta = muon.eta();
+	     float phi = muon.phi();
+	     
+	     ftree->recomuonPt.push_back(pt);
+	     ftree->recomuonEta.push_back(eta);
+	     ftree->recomuonPhi.push_back(phi);
+	  }
 	
-	ftree->recomuonPt.push_back(pt);
-	ftree->recomuonEta.push_back(eta);
-	ftree->recomuonPhi.push_back(phi);
-     }
-
-   // pat muons
-   for(int im=0;im<nPATMuons;im++)
-     {
-	pat::Muon muon = patMuons[im];
-	
-	float pt = muon.pt();
-	float eta = muon.eta();
-	float phi = muon.phi();
-	
-	ftree->patmuonPt.push_back(pt);
-	ftree->patmuonEta.push_back(eta);
-	ftree->patmuonPhi.push_back(phi);
-     }
+	// pat muons
+	for(int im=0;im<nPATMuons;im++)
+	  {
+	     pat::Muon muon = patMuons[im];
+	     
+	     float pt = muon.pt();
+	     float eta = muon.eta();
+	     float phi = muon.phi();
+	     
+	     ftree->patmuonPt.push_back(pt);
+	     ftree->patmuonEta.push_back(eta);
+	     ftree->patmuonPhi.push_back(phi);
+	  }
+     }   
    
    ftree->tree->Fill();
 }
