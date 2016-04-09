@@ -1,0 +1,41 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{multirow}
+\begin{document}
+
+\begin{tabular}{c|c|c|c}
+\hline
+\multicolumn{3}{c|}{Muon-enriched} & Inclusive \\
+\hline
+\multicolumn{3}{c|}{a_{i}, i=0..18} & b_{j}, j=0..2 \\
+N_{\mu}^{\pi/K} (Pythia) & N_{\mu} (Geant4) &
+N_{\mu}^{non-\pi/K} (Pythia)
+& N_{\mu} (Geant4+Pythia) \\
+\hline
+0 & 1 & 0 & \multirow{3}{*}{1} \\
+1 & 0 & 0  \\
+0 & 0 & 1  \\
+\hline
+0 & 2 & 0 & \multirow{6}{*}{2} \\
+1 & 1 & 0 \\
+2 & 0 & 0 \\
+0 & 1 & 1 \\
+1 & 0 & 1 \\
+0 & 0 & 2 \\
+\hline
+0 & 3 & 0 & \multirow{10}{*}{3}  \\
+1 & 2 & 0 \\
+2 & 1 & 0 \\
+3 & 0 & 0 \\
+0 & 2 & 1 \\
+1 & 1 & 1 \\
+2 & 0 & 1 \\
+0 & 1 & 2 \\
+1 & 0 & 2 \\
+0 & 0 & 3 \\
+\hline
+\end{tabular}
+
+\end{document}
