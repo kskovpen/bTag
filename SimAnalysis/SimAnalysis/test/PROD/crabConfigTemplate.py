@@ -9,18 +9,19 @@ config.JobType.pluginName = 'Analysis'
 config.JobType.inputFiles = []
 config.JobType.disableAutomaticOutputCollection = True
 config.JobType.outputFiles = ['output.root']
-config.JobType.pyCfgParams = ['runOnRECO=0']
+config.JobType.pyCfgParams = ['runOnRECO=1']
 config.section_('Data')
 config.Data.totalUnits = -1
 #config.Data.totalUnits = 4
-config.Data.unitsPerJob = 5
+config.Data.unitsPerJob = 1
 #config.Data.unitsPerJob = 30
 config.Data.splitting = 'FileBased'
 #config.Data.splitting = 'LumiBased'
 config.Data.publication = False
-config.Data.ignoreLocality = True
+config.Data.ignoreLocality = False
+config.Data.allowNonValidInputDataset = True
 config.Data.inputDataset = 'INPUTDATASET'
-#config.Data.inputDBS = 'phys03'
+config.Data.inputDBS = 'phys03'
 config.Data.outputDatasetTag = 'PUBLISHDATANAME'
 config.Data.publishDBS = 'https://cmsweb.cern.ch/dbs/prod/phys03/DBSWriter'
 config.Data.outLFNDirBase = 'OUTLFN'
