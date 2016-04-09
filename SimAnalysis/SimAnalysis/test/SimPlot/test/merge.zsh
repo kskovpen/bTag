@@ -7,8 +7,9 @@ if [[ ${dirName} == "" ]]; then
   exit
 fi
 
-dpath="/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/SimAnalysis/SimAnalysis/test/SimPlot/test/hist${dirName}/"
-opath="/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/SimAnalysis/SimAnalysis/test/SimPlot/test/hist${dirName}_MERGED/"
+tpath="/home-pbs/kskovpen/SimAnalysis/CMSSW_7_6_1/src/SimAnalysis/SimAnalysis/test/SimPlot/test"
+dpath="${tpath}/hist${dirName}/"
+opath="${tpath}/hist${dirName}_MERGED/"
 
 rm -rf ${opath}
 mkdir ${opath}

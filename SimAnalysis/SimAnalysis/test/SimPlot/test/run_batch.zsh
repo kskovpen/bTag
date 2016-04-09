@@ -8,6 +8,8 @@ if [[ ${jName} == "" ]]; then
   exit 1
 fi
 
+samp="600to800"
+
 #que="sbg_local"
 #que="cms_local"
 #que="cms"
@@ -15,7 +17,7 @@ que="cms_local_short"
 
 export HOME=$(pwd)
 
-dout="/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/SimAnalysis/SimAnalysis/test/SimPlot/test/"
+dout="/home-pbs/kskovpen/SimAnalysis/CMSSW_7_6_1/src/SimAnalysis/SimAnalysis/test/SimPlot/test/"
 
 fpath="${HOME}/lists/"
 
@@ -29,7 +31,7 @@ mkdir ${logName}
 
 fxsec="xsec/table.txt"
 
-flist=$(ls ${fpath})
+flist=$(ls ${fpath} | grep ${samp})
 
 echo $flist | while read line
 do

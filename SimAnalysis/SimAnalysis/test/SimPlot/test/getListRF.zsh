@@ -1,6 +1,6 @@
 #!/bin/env zsh
 
-fpathMC="/dpm/in2p3.fr/home/cms/phedex/store/user/kskovpen/SimAnalysis/v20160329/"
+fpathMC="/dpm/in2p3.fr/home/cms/phedex/store/user/kskovpen/SimAnalysis/v20160409/"
 
 liMC=($(/usr/bin/rfdir ${fpathMC} | awk '{print $9}'))
 
