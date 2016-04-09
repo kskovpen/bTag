@@ -75,11 +75,41 @@ void SIMPLOT::Tree::Init(TChain *tree)
    muSimEta = 0;
    muSimPhi = 0;
    muSimMomId = 0;
-   
+
    recomuonPt = 0;
    recomuonEta = 0;
    recomuonPhi = 0;
 
+   recomuonIsPFMuon = 0;
+   recomuonIsGlobalMuon = 0;
+   recomuonNumberOfValidMuonHits = 0;
+   recomuonNumberOfMatches = 0;
+   recomuonNumberOfValidHits = 0;
+   recomuonNumberOfValidPixelHits = 0;
+   recomuonNumberOfHits = 0;
+   recomuonNormalizedChi2GlobalTrack = 0;
+   recomuonNormalizedChi2InnerTrack = 0;
+   recomuonNumberOfValidMuonHitsGlobalTrack = 0;
+   recomuonTrackerLayersWithMeasurement = 0;
+   recomuonNumberOfMatchedStations = 0;
+   
+   patmuonPt = 0;
+   patmuonEta = 0;
+   patmuonPhi = 0;
+
+   patmuonIsPFMuon = 0;
+   patmuonIsGlobalMuon = 0;
+   patmuonNumberOfValidMuonHits = 0;
+   patmuonNumberOfMatches = 0;
+   patmuonNumberOfValidHits = 0;
+   patmuonNumberOfValidPixelHits = 0;
+   patmuonNumberOfHits = 0;
+   patmuonNormalizedChi2GlobalTrack = 0;
+   patmuonNormalizedChi2InnerTrack = 0;
+   patmuonNumberOfValidMuonHitsGlobalTrack = 0;
+   patmuonTrackerLayersWithMeasurement = 0;
+   patmuonNumberOfMatchedStations = 0;
+   
    patjetPt = 0;
    patjetEta = 0;
    patjetPhi = 0;
@@ -107,11 +137,41 @@ void SIMPLOT::Tree::Init(TChain *tree)
    fChain->SetBranchAddress("muSimEta", &muSimEta, &b_muSimEta);
    fChain->SetBranchAddress("muSimPhi", &muSimPhi, &b_muSimPhi);
    fChain->SetBranchAddress("muSimMomId", &muSimMomId, &b_muSimMomId);
-   
+
    fChain->SetBranchAddress("recomuonPt", &recomuonPt, &b_recomuonPt);
    fChain->SetBranchAddress("recomuonEta", &recomuonEta, &b_recomuonEta);
    fChain->SetBranchAddress("recomuonPhi", &recomuonPhi, &b_recomuonPhi);
 
+   fChain->SetBranchAddress("recomuonIsPFMuon", &recomuonIsPFMuon, &b_recomuonIsPFMuon);
+   fChain->SetBranchAddress("recomuonIsGlobalMuon", &recomuonIsGlobalMuon, &b_recomuonIsGlobalMuon);
+   fChain->SetBranchAddress("recomuonNumberOfValidMuonHits", &recomuonNumberOfValidMuonHits, &b_recomuonNumberOfValidMuonHits);
+   fChain->SetBranchAddress("recomuonNumberOfMatches", &recomuonNumberOfMatches, &b_recomuonNumberOfMatches);
+   fChain->SetBranchAddress("recomuonNumberOfValidHits", &recomuonNumberOfValidHits, &b_recomuonNumberOfValidHits);
+   fChain->SetBranchAddress("recomuonNumberOfValidPixelHits", &recomuonNumberOfValidPixelHits, &b_recomuonNumberOfValidPixelHits);
+   fChain->SetBranchAddress("recomuonNumberOfHits", &recomuonNumberOfHits, &b_recomuonNumberOfHits);
+   fChain->SetBranchAddress("recomuonNormalizedChi2GlobalTrack", &recomuonNormalizedChi2GlobalTrack, &b_recomuonNormalizedChi2GlobalTrack);
+   fChain->SetBranchAddress("recomuonNormalizedChi2InnerTrack", &recomuonNormalizedChi2InnerTrack, &b_recomuonNormalizedChi2InnerTrack);
+   fChain->SetBranchAddress("recomuonNumberOfValidMuonHitsGlobalTrack", &recomuonNumberOfValidMuonHitsGlobalTrack, &b_recomuonNumberOfValidMuonHitsGlobalTrack);
+   fChain->SetBranchAddress("recomuonTrackerLayersWithMeasurement", &recomuonTrackerLayersWithMeasurement, &b_recomuonTrackerLayersWithMeasurement);
+   fChain->SetBranchAddress("recomuonNumberOfMatchedStations", &recomuonNumberOfMatchedStations, &b_recomuonNumberOfMatchedStations);
+   
+   fChain->SetBranchAddress("patmuonPt", &patmuonPt, &b_patmuonPt);
+   fChain->SetBranchAddress("patmuonEta", &patmuonEta, &b_patmuonEta);
+   fChain->SetBranchAddress("patmuonPhi", &patmuonPhi, &b_patmuonPhi);
+   
+   fChain->SetBranchAddress("patmuonIsPFMuon", &patmuonIsPFMuon, &b_patmuonIsPFMuon);
+   fChain->SetBranchAddress("patmuonIsGlobalMuon", &patmuonIsGlobalMuon, &b_patmuonIsGlobalMuon);
+   fChain->SetBranchAddress("patmuonNumberOfValidMuonHits", &patmuonNumberOfValidMuonHits, &b_patmuonNumberOfValidMuonHits);
+   fChain->SetBranchAddress("patmuonNumberOfMatches", &patmuonNumberOfMatches, &b_patmuonNumberOfMatches);
+   fChain->SetBranchAddress("patmuonNumberOfValidHits", &patmuonNumberOfValidHits, &b_patmuonNumberOfValidHits);
+   fChain->SetBranchAddress("patmuonNumberOfValidPixelHits", &patmuonNumberOfValidPixelHits, &b_patmuonNumberOfValidPixelHits);
+   fChain->SetBranchAddress("patmuonNumberOfHits", &patmuonNumberOfHits, &b_patmuonNumberOfHits);
+   fChain->SetBranchAddress("patmuonNormalizedChi2GlobalTrack", &patmuonNormalizedChi2GlobalTrack, &b_patmuonNormalizedChi2GlobalTrack);
+   fChain->SetBranchAddress("patmuonNormalizedChi2InnerTrack", &patmuonNormalizedChi2InnerTrack, &b_patmuonNormalizedChi2InnerTrack);
+   fChain->SetBranchAddress("patmuonNumberOfValidMuonHitsGlobalTrack", &patmuonNumberOfValidMuonHitsGlobalTrack, &b_patmuonNumberOfValidMuonHitsGlobalTrack);
+   fChain->SetBranchAddress("patmuonTrackerLayersWithMeasurement", &patmuonTrackerLayersWithMeasurement, &b_patmuonTrackerLayersWithMeasurement);
+   fChain->SetBranchAddress("patmuonNumberOfMatchedStations", &patmuonNumberOfMatchedStations, &b_patmuonNumberOfMatchedStations);
+   
    fChain->SetBranchAddress("patjetPt", &patjetPt, &b_patjetPt);
    fChain->SetBranchAddress("patjetEta", &patjetEta, &b_patjetEta);
    fChain->SetBranchAddress("patjetPhi", &patjetPhi, &b_patjetPhi);
