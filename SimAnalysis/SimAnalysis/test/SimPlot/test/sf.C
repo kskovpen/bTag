@@ -5,7 +5,7 @@ TStyle* Style();
 
 void addbin(TH1D *h);
 
-void punchThroughRpv()
+void sf()
 {
    gROOT->SetBatch();
    gROOT->SetStyle("Plain");
@@ -26,80 +26,104 @@ void punchThroughRpv()
    leg->SetFillColor(253);
    leg->SetBorderSize(0);
 
-//   std::string fpath = "plotIncl/";
-   std::string fpath = "plotMu/";
-   std::string histname1 = "h_mu1_rpv";
-   std::string histname2 = "h_muSim1_rpv";
-
-   TFile *f[100];
-
-   TH1D *h1;
-   TH1D *h2;
+   std::string ptHat = "800to1000";
    
-   std::vector<std::string> hName;   
-   hName.push_back("output");
-   int nSamp_h = hName.size();
-  
-   for(int i=0;i<nSamp_h;i++)
-     {
-	std::string fname = fpath+hName.at(i)+".root";
-	f[i] = TFile::Open(fname.c_str());
-     }
+   std::string fpathM = "histTEST_MERGED/QCD_Pt-"+ptHat+"_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8/data.root";
+   std::string fpathI = "histTEST_MERGED/QCD_Pt_"+ptHat+"_TuneCUETP8M1_13TeV_pythia8/data.root";   
    
-   for(int i=0;i<nSamp_h;i++)
+   std::string histnameM = "h_muPythiaGeant_N";
+   std::string histnameI = "h_muGeant_N";
+
+   
+   TFile *fM;
+   TFile *fI;
+
+   TH1D *hM;
+   TH1D *hI;
+   
+   fM = TFile::Open(fpathM.c_str());
+   fI = TFile::Open(fpathI.c_str());
+   
      {	
-	TH1D *h1_c = (TH1D*)f[i]->Get(histname1.c_str());
-	h1_c->SetMarkerSize(0.0);
+	TH1D *hM_c = (TH1D*)fM->Get(histnameM.c_str());
+	hM_c->SetMarkerSize(0.0);
 
-	TH1D *h2_c = (TH1D*)f[i]->Get(histname2.c_str());
-	h2_c->SetMarkerSize(0.0);
-	
-	if( i == 0 )
-	  {	     
-	     h1 = (TH1D*)h1_c->Clone("h1");
-	     h2 = (TH1D*)h2_c->Clone("h2");
-	  }
-	else
-	  {
-	     h1->Add(h1_c);
-	     h2->Add(h2_c);
-	  }
+	hM = (TH1D*)hM_c->Clone("hM");
      }
 
-   addbin(h1);
-   addbin(h2);
-   
-   double ih1 = h1->Integral();
-   double ih2 = h2->Integral();
+     {	
+	TH1D *hI_c = (TH1D*)fI->Get(histnameI.c_str());
+	hI_c->SetMarkerSize(0.0);
 
-   h1->SetLineColor(kRed);
-   h1->SetFillColor(kRed);
-   h2->SetLineColor(kBlue);
-
-   h1->GetXaxis()->SetTitle("Distance to muon origin [cm]");
-   h1->GetYaxis()->SetTitle("Number of muons");
+	hI = (TH1D*)hI_c->Clone("hI");
+     }
    
-   leg->AddEntry(h1,"Pythia","f");
-   leg->AddEntry(h2,"Geant4","f");
-   leg->Draw();   
+   hM->SetLineColor(9);
+   hM->SetFillColor(9);
    
-//   h1->Scale(1./h1->Integral());
-//   h2->Scale(1./h2->Integral());
+   hI->SetLineColor(46);
+   hI->SetFillColor(46);
    
-   h1->Draw("hist e1");
-   h2->Draw("hist e1 same");
-
-   float m1 = h1->GetMaximum();
-   float m2 = h2->GetMaximum();
-   float mmax = (m1 > m2) ? m1 : m2;
+   hM->Draw("hist e1");
+  
+   float max = hM->GetMaximum();
    
-   h1->SetMaximum(1.3*mmax);
-
-   leg->Draw();
-
-   c1->SetLogy(1);
-   c1->Print("pics/punchThroughRpv.eps");
+   hM->SetMaximum(1.3*max);
+   hM->SetMinimum(0.);
+   
+   c1->Print("pics/sfM.eps");
    c1->Clear();
+
+   hI->Draw("hist e1");
+  
+   max = hI->GetMaximum();
+   
+   hI->SetMaximum(1.3*max);
+   hI->SetMinimum(0.);
+   
+   c1->Print("pics/sfI.eps");
+   c1->Clear();
+
+   float g1 = hI->GetBinContent(2);
+   float g2 = hI->GetBinContent(3);
+   float g3 = hI->GetBinContent(4);
+   
+   float x3 = hM->GetBinContent(1);
+   float x5 = hM->GetBinContent(3);
+   float x6 = hM->GetBinContent(5);
+   float x8 = hM->GetBinContent(11);
+   float x9 = hM->GetBinContent(12);
+   float x10 = hM->GetBinContent(13);
+
+   float y1 = hM->GetBinContent(2);
+   float y2 = hM->GetBinContent(7);
+   float y3 = hM->GetBinContent(8);
+   float y4 = hM->GetBinContent(14);
+   float y5 = hM->GetBinContent(15);
+   float y6 = hM->GetBinContent(16);
+   
+   float z1 = hM->GetBinContent(10);
+   float z2 = hM->GetBinContent(17);
+   float z3 = hM->GetBinContent(18);
+   
+   float h1 = hM->GetBinContent(19);
+
+   float w1 = (g1-y1)/x3;
+   float w2 = (g2-x5*w1-y2-y3*w1-z1)/x6;
+   float w3 = (g3-w1*x8-w2*x9-y4-w1*y5-w2*y6-z2-w1*z3-h1)/x10;
+   
+   std::cout << "w1 = ( g1 - y1 ) / x3" << std::endl;
+   std::cout << "w1 = ( " << g1 << " - " << y1 << " ) / " << x3 << std::endl;
+   
+   std::cout << "w2 = ( g2 - x5 * w1 - y2 - y3 * w1 - z1 ) / x6" << std::endl;
+   std::cout << "w2 = ( " << g2 << " - " << x5 << " * " << w1 << " - " << y2 << " - " << y3 << " * " << w1 << " - " << z1 << " ) / " << x6 << std::endl;
+   
+   std::cout << "w3 = ( g3 - w1 * x8 - w2 * x9 - y4 - w1 * y5 - w2 * y6 - z2 - w1 * z3 - h1 ) / x10" << std::endl;
+   std::cout << "w3 = ( " << g3 << " - " << w1 << " * " << x8 << " - " << w2 << " * " << x9 << " - " << y4 << " - " << w1 << " * " << y5 << " - " << w2 << " * " << y6 << " - " << z2 << " - " << w1 << " * " << z3 << " - " << h1 << " ) / " << x10 << std::endl;
+
+   std::cout << "w1 = " << w1 << std::endl;
+   std::cout << "w2 = " << w2 << std::endl;
+   std::cout << "w3 = " << w3 << std::endl;
    
    gApplication->Terminate();
 }

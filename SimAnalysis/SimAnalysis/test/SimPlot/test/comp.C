@@ -5,6 +5,8 @@ TStyle* Style();
 
 void addbin(TH1D *h);
 
+bool scale = 0;
+
 void comp()
 {
    gROOT->SetBatch();
@@ -26,10 +28,27 @@ void comp()
    leg->SetFillColor(253);
    leg->SetBorderSize(0);
 
-   std::string fpath = "histTEST_MERGED/QCD_Pt_120to170_TuneCUETP8M1_13TeV_pythia8/data.root";
-   std::string fpathMu = "histTEST_MERGED/QCD_Pt-120to170_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8/data.root";
-//   std::string histname = "h_mu1_partonId";
-   std::string histname = "h_muLJet1_pt";
+   std::string ptHat = "600to800";
+
+   std::string fpath = "histTEST_MERGED/QCD_Pt_"+ptHat+"_TuneCUETP8M1_13TeV_pythia8/data.root";
+   std::string fpathMu = "histTEST_MERGED/QCD_Pt-"+ptHat+"_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8/data.root";
+//   std::string histname = "h_mu1_id";
+//   std::string histname = "h_muJet1_pt";
+//   std::string histname = "h_muAll1_pt";
+//   std::string histname = "h_muAllPKMatchedRec1_pt";
+//   std::string histname = "h_muPK2_gensim";
+//   std::string histname = "h_muPK21_gensim";
+//   std::string histname = "h_muOTHER21_gensim";
+//   std::string histname = "h_muNOTPK2_gensim";
+//   std::string histname = "h_muVal3_pt";
+//   std::string histname = "h_muValUncor3_pt";
+//   std::string histname = "h_muRecValUncor3_pt";
+   std::string histname = "h_muRecVal3_pt";
+//   std::string histname = "h_muAllMatchedRec1_pt";
+//   std::string histname = "h_muAllBD1_pt";
+//   std::string histname = "h_muSimOTHER1_pt";
+//   std::string histname = "h_muAll1_pt";
+//   std::string histname = "h_muJetReal_pt";
    std::string histnameNorm = "h_mu2_id";
 
    TFile *f;
@@ -76,6 +95,12 @@ void comp()
    double ihMuNorm = hMuNorm->Integral();
 
    std::cout << ih/ihMu << std::endl;
+
+   if( scale )
+     {
+	h->Scale(1./ih);
+	hMu->Scale(1./ihMu);
+     }   
    
 /*   double v1 = hNorm->GetBinContent(1)+
      hNorm->GetBinContent(2)+
@@ -104,13 +129,32 @@ void comp()
    float mmax = (m1 > m2) ? m1 : m2;
    
    h->SetMaximum(1.3*mmax);
+   h->SetMinimum(0.);
 
    if( histname == "h_mu1_pt" || histname == "h_mu2_pt" ||
        histname == "h_muSim1_pt" || histname == "h_muSim2_pt" ||
-       histname == "h_muAll1_pt" || histname == "h_muAll2_pt" )
+       histname == "h_muAll1_pt" || histname == "h_muAll2_pt" ||
+       histname == "h_muAllBD1_pt" || histname == "h_muAllBD2_pt" ||
+       histname == "h_muAllPK1_pt" || histname == "h_muAllPK2_pt" ||
+       histname == "h_muAllBDMatchedRec1_pt" || histname == "h_muAllBDMatchedRec2_pt" ||
+       histname == "h_muAllPKMatchedRec1_pt" || histname == "h_muAllPKMatchedRec2_pt"
+     )
      {	
 	h->GetXaxis()->SetTitle("p_{T} [GeV]");
 	h->GetYaxis()->SetTitle("Number of muons");
+     }
+   else if( histname == "h_muVal1_pt" || histname == "h_muValUncor1_pt" ||
+	    histname == "h_muVal2_pt" || histname == "h_muValUncor2_pt" ||
+	    histname == "h_muVal3_pt" || histname == "h_muValUncor3_pt" ||
+	    histname == "h_muRecVal1_pt" || histname == "h_muRecValUncor1_pt" ||
+	    histname == "h_muRecVal2_pt" || histname == "h_muRecValUncor2_pt" ||
+	    histname == "h_muRecVal3_pt" || histname == "h_muRecValUncor3_pt" ||
+	    histname == "h_muGenOTHER1_pt" || histname == "h_muGenOTHER2_pt" ||
+	    histname == "h_muSimOTHER1_pt" || histname == "h_muSimOTHER2_pt"
+	  )
+     {	
+	h->GetXaxis()->SetTitle("p_{T} [GeV]");
+	h->GetYaxis()->SetTitle("Number of events");
      }
    else if( histname == "h_mu1_id" || histname == "h_mu2_id" )
      {	
@@ -131,14 +175,36 @@ void comp()
 	h->GetXaxis()->SetBinLabel(4,"Bottom");
 	h->GetYaxis()->SetTitle("Number of muons");
      }
+
+   else if( histname == "h_muPK1_gensim" ||
+	    histname == "h_muPK21_gensim" ||
+	    histname == "h_muOTHER1_gensim" )
+     {
+	h->GetXaxis()->SetBinLabel(1,"Pythia");
+	h->GetXaxis()->SetBinLabel(2,"Geant4");
+	h->GetYaxis()->SetTitle("Number of events");
+     }
+
+   else if( histname == "h_muPK2_gensim" )
+     {	
+	h->GetXaxis()->SetBinLabel(1,"Pythia+Pythia");
+	h->GetXaxis()->SetBinLabel(2,"Pythia+Geant4");
+	h->GetXaxis()->SetBinLabel(3,"Geant4+Geant4");
+	h->GetYaxis()->SetTitle("Number of events");
+     }
    
    leg->AddEntry(h,"Inclusive","f");
    leg->AddEntry(hMu,"Mu-enriched","f");
    
    leg->Draw();
+
+//   c1->SetLogy(1);
    
    c1->Print("pics/comp.eps");
    c1->Clear();
+
+   if( histname == "h_muPK1_gensim" )
+     std::cout << h->GetBinContent(2)/hMu->GetBinContent(1) << std::endl;
    
    gApplication->Terminate();
 }
