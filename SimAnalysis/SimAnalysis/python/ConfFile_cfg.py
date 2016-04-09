@@ -28,7 +28,8 @@ if options.runOnRECO:
 
     process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
     from Configuration.AlCa.GlobalTag import GlobalTag
-    process.GlobalTag.globaltag = "MCRUN2_74_V9A"
+    #process.GlobalTag.globaltag = "MCRUN2_74_V9A"
+    process.GlobalTag.globaltag = "76X_mcRun2_asymptotic_v12"
 
     process.es_prefer_GBRWrapperRcd = cms.ESPrefer("PoolDBESSource","loadRecoTauTagMVAsFromPrepDBPFlow")
 
@@ -40,7 +41,8 @@ process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(    
 #    "root://sbgse1.in2p3.fr//dpm/in2p3.fr/home/cms/phedex/store/user/kskovpen/Test/Incl.root"
-"root://sbgse1.in2p3.fr//dpm/in2p3.fr/home/cms/phedex/store/user/kskovpen/Test/MuReco.root"
+"root://sbgse1.in2p3.fr//dpm/in2p3.fr/home/cms/phedex/store/user/kskovpen/BTV/MCPROD/v20160403/QCD_Pt_170to300_TuneCUETP8M1_13TeV_pythia8/kskovpen/160403_075436/0000/BTV-RunIIFall15DR76-00001_99.root"
+#"root://sbgse1.in2p3.fr//dpm/in2p3.fr/home/cms/phedex/store/user/kskovpen/Test/MuReco.root"
     )
 )
 
