@@ -339,10 +339,36 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	     float pt = muon.pt();
 	     float eta = muon.eta();
 	     float phi = muon.phi();
+
+	     bool isPFMuon = muon.isPFMuon();
+	     bool isGlobalMuon = muon.isGlobalMuon();
+	     int numberOfValidMuonHits = (muon.outerTrack().isNonnull()) ? muon.outerTrack()->hitPattern().numberOfValidMuonHits() : -1;
+	     int numberOfMatches = muon.numberOfMatches();
+	     int numberOfValidHits = (muon.innerTrack().isNonnull()) ? muon.innerTrack()->hitPattern().numberOfValidHits() : -1;
+	     int numberOfValidPixelHits = (muon.innerTrack().isNonnull()) ? muon.innerTrack()->hitPattern().numberOfValidPixelHits() : -1;
+	     int numberOfHits = (muon.innerTrack().isNonnull()) ? muon.innerTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_OUTER_HITS) : -1;	     
+	     float normalizedChi2GlobalTrack = (muon.globalTrack().isNonnull()) ? muon.globalTrack()->normalizedChi2() : -1;
+	     float normalizedChi2InnerTrack = (muon.innerTrack().isNonnull()) ? muon.innerTrack()->normalizedChi2() : -1;
+	     int numberOfValidMuonHitsGlobalTrack = (muon.globalTrack().isNonnull()) ? muon.globalTrack()->hitPattern().numberOfValidMuonHits() : -1;
+	     int trackerLayersWithMeasurement = (muon.globalTrack().isNonnull()) ? muon.globalTrack()->hitPattern().trackerLayersWithMeasurement() : -1;
+	     int numberOfMatchedStations = muon.numberOfMatchedStations();
 	     
 	     ftree->recomuonPt.push_back(pt);
 	     ftree->recomuonEta.push_back(eta);
 	     ftree->recomuonPhi.push_back(phi);
+
+	     ftree->recomuonIsPFMuon.push_back(isPFMuon);
+	     ftree->recomuonIsGlobalMuon.push_back(isGlobalMuon);
+	     ftree->recomuonNumberOfValidMuonHits.push_back(numberOfValidMuonHits);
+	     ftree->recomuonNumberOfMatches.push_back(numberOfMatches);
+	     ftree->recomuonNumberOfValidHits.push_back(numberOfValidHits);
+	     ftree->recomuonNumberOfValidPixelHits.push_back(numberOfValidPixelHits);
+	     ftree->recomuonNumberOfHits.push_back(numberOfHits);
+	     ftree->recomuonNormalizedChi2GlobalTrack.push_back(normalizedChi2GlobalTrack);
+	     ftree->recomuonNormalizedChi2InnerTrack.push_back(normalizedChi2InnerTrack);
+	     ftree->recomuonNumberOfValidMuonHitsGlobalTrack.push_back(numberOfValidMuonHitsGlobalTrack);
+	     ftree->recomuonTrackerLayersWithMeasurement.push_back(trackerLayersWithMeasurement);
+	     ftree->recomuonNumberOfMatchedStations.push_back(numberOfMatchedStations);
 	  }
 	
 	// pat muons
@@ -353,10 +379,36 @@ void SimAnalysis::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	     float pt = muon.pt();
 	     float eta = muon.eta();
 	     float phi = muon.phi();
-	     
+
+	     bool isPFMuon = muon.isPFMuon();
+	     bool isGlobalMuon = muon.isGlobalMuon();
+	     int numberOfValidMuonHits = (muon.outerTrack().isNonnull()) ? muon.outerTrack()->hitPattern().numberOfValidMuonHits() : -1;
+	     int numberOfMatches = muon.numberOfMatches();
+	     int numberOfValidHits = (muon.innerTrack().isNonnull()) ? muon.innerTrack()->hitPattern().numberOfValidHits() : -1;
+	     int numberOfValidPixelHits = (muon.innerTrack().isNonnull()) ? muon.innerTrack()->hitPattern().numberOfValidPixelHits() : -1;
+	     int numberOfHits = (muon.innerTrack().isNonnull()) ? muon.innerTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_OUTER_HITS) : -1;	     
+	     float normalizedChi2GlobalTrack = (muon.globalTrack().isNonnull()) ? muon.globalTrack()->normalizedChi2() : -1;
+	     float normalizedChi2InnerTrack = (muon.innerTrack().isNonnull()) ? muon.innerTrack()->normalizedChi2() : -1;
+	     int numberOfValidMuonHitsGlobalTrack = (muon.globalTrack().isNonnull()) ? muon.globalTrack()->hitPattern().numberOfValidMuonHits() : -1;
+	     int trackerLayersWithMeasurement = (muon.globalTrack().isNonnull()) ? muon.globalTrack()->hitPattern().trackerLayersWithMeasurement() : -1;
+	     int numberOfMatchedStations = muon.numberOfMatchedStations();
+	     	     	     
 	     ftree->patmuonPt.push_back(pt);
 	     ftree->patmuonEta.push_back(eta);
 	     ftree->patmuonPhi.push_back(phi);
+	     
+	     ftree->patmuonIsPFMuon.push_back(isPFMuon);
+	     ftree->patmuonIsGlobalMuon.push_back(isGlobalMuon);
+	     ftree->patmuonNumberOfValidMuonHits.push_back(numberOfValidMuonHits);
+	     ftree->patmuonNumberOfMatches.push_back(numberOfMatches);
+	     ftree->patmuonNumberOfValidHits.push_back(numberOfValidHits);
+	     ftree->patmuonNumberOfValidPixelHits.push_back(numberOfValidPixelHits);
+	     ftree->patmuonNumberOfHits.push_back(numberOfHits);
+	     ftree->patmuonNormalizedChi2GlobalTrack.push_back(normalizedChi2GlobalTrack);
+	     ftree->patmuonNormalizedChi2InnerTrack.push_back(normalizedChi2InnerTrack);
+	     ftree->patmuonNumberOfValidMuonHitsGlobalTrack.push_back(numberOfValidMuonHitsGlobalTrack);
+	     ftree->patmuonTrackerLayersWithMeasurement.push_back(trackerLayersWithMeasurement);
+	     ftree->patmuonNumberOfMatchedStations.push_back(numberOfMatchedStations);
 	  }
      }   
    

@@ -50,9 +50,35 @@ void SimTree::Init()
    recomuonEta.clear();
    recomuonPhi.clear();
 
+   recomuonIsPFMuon.clear();
+   recomuonIsGlobalMuon.clear();
+   recomuonNumberOfValidMuonHits.clear();
+   recomuonNumberOfMatches.clear();
+   recomuonNumberOfValidHits.clear();
+   recomuonNumberOfValidPixelHits.clear();
+   recomuonNumberOfHits.clear();
+   recomuonNormalizedChi2GlobalTrack.clear();
+   recomuonNormalizedChi2InnerTrack.clear();   
+   recomuonNumberOfValidMuonHitsGlobalTrack.clear();
+   recomuonTrackerLayersWithMeasurement.clear();
+   recomuonNumberOfMatchedStations.clear();
+   
    patmuonPt.clear();
    patmuonEta.clear();
    patmuonPhi.clear();
+   
+   patmuonIsPFMuon.clear();
+   patmuonIsGlobalMuon.clear();
+   patmuonNumberOfValidMuonHits.clear();
+   patmuonNumberOfMatches.clear();
+   patmuonNumberOfValidHits.clear();
+   patmuonNumberOfValidPixelHits.clear();
+   patmuonNumberOfHits.clear();
+   patmuonNormalizedChi2GlobalTrack.clear();
+   patmuonNormalizedChi2InnerTrack.clear();   
+   patmuonNumberOfValidMuonHitsGlobalTrack.clear();
+   patmuonTrackerLayersWithMeasurement.clear();
+   patmuonNumberOfMatchedStations.clear();
 }
 
 void SimTree::CreateBranches(int buffersize = 32000)
@@ -104,4 +130,34 @@ void SimTree::CreateBranches(int buffersize = 32000)
    tree->Branch("recomuonPt", "std::vector<float>", &recomuonPt, buffersize);
    tree->Branch("recomuonEta", "std::vector<float>", &recomuonEta, buffersize);
    tree->Branch("recomuonPhi", "std::vector<float>", &recomuonPhi, buffersize);
+
+   tree->Branch("recomuonIsPFMuon", "std::vector<bool>", &recomuonIsPFMuon, buffersize);
+   tree->Branch("recomuonIsGlobalMuon", "std::vector<bool>", &recomuonIsGlobalMuon, buffersize);
+   tree->Branch("recomuonNumberOfValidMuonHits", "std::vector<int>", &recomuonNumberOfValidMuonHits, buffersize);
+   tree->Branch("recomuonNumberOfMatches", "std::vector<int>", &recomuonNumberOfMatches, buffersize);
+   tree->Branch("recomuonNumberOfValidHits", "std::vector<int>", &recomuonNumberOfValidHits, buffersize);
+   tree->Branch("recomuonNumberOfValidPixelHits", "std::vector<int>", &recomuonNumberOfValidPixelHits, buffersize);
+   tree->Branch("recomuonNumberOfHits", "std::vector<int>", &recomuonNumberOfHits, buffersize);
+   tree->Branch("recomuonNormalizedChi2GlobalTrack", "std::vector<float>", &recomuonNormalizedChi2GlobalTrack, buffersize);
+   tree->Branch("recomuonNormalizedChi2InnerTrack", "std::vector<float>", &recomuonNormalizedChi2InnerTrack, buffersize);
+   tree->Branch("recomuonNumberOfValidMuonHitsGlobalTrack", "std::vector<int>", &recomuonNumberOfValidMuonHitsGlobalTrack, buffersize);
+   tree->Branch("recomuonTrackerLayersWithMeasurement", "std::vector<int>", &recomuonTrackerLayersWithMeasurement, buffersize);
+   tree->Branch("recomuonNumberOfMatchedStations", "std::vector<int>", &recomuonNumberOfMatchedStations, buffersize);
+   
+   tree->Branch("patmuonPt", "std::vector<float>", &patmuonPt, buffersize);
+   tree->Branch("patmuonEta", "std::vector<float>", &patmuonEta, buffersize);
+   tree->Branch("patmuonPhi", "std::vector<float>", &patmuonPhi, buffersize);
+   
+   tree->Branch("patmuonIsPFMuon", "std::vector<bool>", &patmuonIsPFMuon, buffersize);
+   tree->Branch("patmuonIsGlobalMuon", "std::vector<bool>", &patmuonIsGlobalMuon, buffersize);
+   tree->Branch("patmuonNumberOfValidMuonHits", "std::vector<int>", &patmuonNumberOfValidMuonHits, buffersize);
+   tree->Branch("patmuonNumberOfMatches", "std::vector<int>", &patmuonNumberOfMatches, buffersize);
+   tree->Branch("patmuonNumberOfValidHits", "std::vector<int>", &patmuonNumberOfValidHits, buffersize);
+   tree->Branch("patmuonNumberOfValidPixelHits", "std::vector<int>", &patmuonNumberOfValidPixelHits, buffersize);
+   tree->Branch("patmuonNumberOfHits", "std::vector<int>", &patmuonNumberOfHits, buffersize);
+   tree->Branch("patmuonNormalizedChi2GlobalTrack", "std::vector<float>", &patmuonNormalizedChi2GlobalTrack, buffersize);
+   tree->Branch("patmuonNormalizedChi2InnerTrack", "std::vector<float>", &patmuonNormalizedChi2InnerTrack, buffersize);
+   tree->Branch("patmuonNumberOfValidMuonHitsGlobalTrack", "std::vector<int>", &patmuonNumberOfValidMuonHitsGlobalTrack, buffersize);
+   tree->Branch("patmuonTrackerLayersWithMeasurement", "std::vector<int>", &patmuonTrackerLayersWithMeasurement, buffersize);
+   tree->Branch("patmuonNumberOfMatchedStations", "std::vector<int>", &patmuonNumberOfMatchedStations, buffersize);
 }
