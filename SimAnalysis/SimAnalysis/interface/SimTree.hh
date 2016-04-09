@@ -73,9 +73,35 @@ class SimTree
    std::vector<float> recomuonEta;
    std::vector<float> recomuonPhi;
 
+   std::vector<bool> recomuonIsPFMuon;
+   std::vector<bool> recomuonIsGlobalMuon;
+   std::vector<int> recomuonNumberOfValidMuonHits;
+   std::vector<int> recomuonNumberOfMatches;
+   std::vector<int> recomuonNumberOfValidHits;
+   std::vector<int> recomuonNumberOfValidPixelHits;
+   std::vector<int> recomuonNumberOfHits;
+   std::vector<float> recomuonNormalizedChi2GlobalTrack;
+   std::vector<float> recomuonNormalizedChi2InnerTrack;
+   std::vector<int> recomuonNumberOfValidMuonHitsGlobalTrack;
+   std::vector<int> recomuonTrackerLayersWithMeasurement;
+   std::vector<int> recomuonNumberOfMatchedStations;
+   
    std::vector<float> patmuonPt;
    std::vector<float> patmuonEta;
    std::vector<float> patmuonPhi;
+
+   std::vector<bool> patmuonIsPFMuon;
+   std::vector<bool> patmuonIsGlobalMuon;
+   std::vector<int> patmuonNumberOfValidMuonHits;
+   std::vector<int> patmuonNumberOfMatches;
+   std::vector<int> patmuonNumberOfValidHits;
+   std::vector<int> patmuonNumberOfValidPixelHits;
+   std::vector<int> patmuonNumberOfHits;
+   std::vector<float> patmuonNormalizedChi2GlobalTrack;
+   std::vector<float> patmuonNormalizedChi2InnerTrack;
+   std::vector<int> patmuonNumberOfValidMuonHitsGlobalTrack;
+   std::vector<int> patmuonTrackerLayersWithMeasurement;
+   std::vector<int> patmuonNumberOfMatchedStations;
 };
 
 #endif
