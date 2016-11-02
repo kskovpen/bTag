@@ -1,0 +1,17 @@
+<use name="FWCore/Framework"/>
+<use name="FWCore/PluginManager"/>
+<use name="FWCore/ParameterSet"/>
+<use name="FWCore/Utilities"/>
+<use name="DataFormats/Common"/>
+<use name="SimDataFormats/GeneratorProducts"/>
+<use name="SimGeneral/HepPDTRecord"/>
+<use name="PhysicsTools/UtilAlgos"/>
+<use name="Geometry/RPCGeometry"/>
+<use name="Geometry/CSCGeometry"/>
+<use name="Geometry/DTGeometry"/>
+<use name="SimDataFormats/DigiSimLinks"/>
+<use name="hepmc"/>
+<use name="heppdt"/>
+<use name="geant4"/>
+<use name=""/>
+<flags EDM_PLUGIN="1"/>
