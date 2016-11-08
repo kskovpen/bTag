@@ -45,10 +45,10 @@ void LTANA::Reweight::init(int doRW,
    _jPtMin = jPtMin;
    _jPtMax = jPtMax;
    
-   std::string fname = "/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/LTAnalysis/test/reweight/test/corrections.root";
+   std::string fname = "/home-pbs/kskovpen/bTag2016/CMSSW_7_4_6_patch6/src/LTAnalysis/test/reweight/test/corrections.root";
    
    bool exist = !(gSystem->AccessPathName(fname.c_str()));
-   
+
    if( !exist )
      {
 	std::cout << "Input file with RW factors can not be opened, no corrections will be applied" << std::endl;

@@ -2,28 +2,28 @@
 
 runName="hist${1}"
 
-#tool="Hist"
-tool="HistBoost"
+tool="Hist"
+#tool="HistBoost"
 
-#fpath="lists/"
-fpath=""
+fpath="lists/"
+#fpath=""
 
 nmaxDATA=100000
 nmaxMC=1000
 nmax=1000
 njobMax=16
 doRW=0
+doPU=1
+doPS=1
 sample=0 # 0-mu-enriched 1-inclusive
 
-fxsec="xsec/table.txt"
+fxsec="xsec/tablev1.txt"
 
 rm -f log/*
 rm -rf ${runName}
 mkdir ${runName}
 
-#flist=$(ls ${fpath} | grep "QCD_Pt-600to800_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8_ID0.txt")
-#flist=$(ls ${fpath} | grep "BTagMu_Run2015D-16Dec2015-v1_SILVER_ID50.txt")
-flist="list.txt"
+flist=$(ls ${fpath} | grep "Run2016C")
 echo $flist | while read line
 do
 jidx=0
@@ -58,6 +58,9 @@ datamc="MC"
 nmax=${nmaxMC}
 fi
 
+isdata=1
+datamc="DATA"
+
 #cat ${fpath}${line} | while read line2
 #do
 fout=$(echo ${runName}/${dataset}/${line}_${jidx} | sed 's%.txt%%g')
@@ -80,7 +83,7 @@ fi
 
 echo ${line} ${datamc}
 
-.././LTAnalysis ${fpath}${line} ${fout} ${isdata} ${noe} ${xsec} ${eff} ${nmax} ${doRW} ${tool} ${sample}
+.././LTAnalysis ${fpath}${line} ${fout} ${isdata} ${noe} ${xsec} ${eff} ${nmax} ${doRW} ${tool} ${sample} ${doPU} ${doPS}
 
 jidx=$[$jidx+1]
 done

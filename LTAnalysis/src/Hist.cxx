@@ -30,7 +30,7 @@ void LTANA::Hist::init()
    ttree->Branch("j4Pt",&t_j4Pt,"j4Pt/F");
    ttree->Branch("j4Eta",&t_j4Eta,"j4Eta/F");
 */   
-   TFile *fPileup = TFile::Open("/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/LTAnalysis/test/macros/npv.root");
+   TFile *fPileup = TFile::Open("/user/kskovpen/analysis/bTag/CMSSW_8_0_12/src/LTAnalysis/test/macros/npv.root");
    _h_pileup = (TH1D*)fPileup->Get("h_npv");
    
    _fout->cd();
@@ -74,13 +74,13 @@ void LTANA::Hist::init()
    histNameDefined_jet[18] = "h_j1_etaAway_";
    histNameDefined_jet[19] = "h_j1_hasMuon_";
 
-/*   hist_jet.push_back(HIST_J1_PT);
+   hist_jet.push_back(HIST_J1_PT);
    hist_jet.push_back(HIST_J1_NSELTRK);
    hist_jet.push_back(HIST_J1_ETA);
    hist_jet.push_back(HIST_J1_NTRK);
    hist_jet.push_back(HIST_J1_NJET);
-   hist_jet.push_back(HIST_J1_NSV);
-   hist_jet.push_back(HIST_J1_MUPT);*/
+//   hist_jet.push_back(HIST_J1_NSV);
+   hist_jet.push_back(HIST_J1_MUPT);
    hist_jet.push_back(HIST_J1_JP);
 //   hist_jet.push_back(HIST_J1_HASMUON);
 //   hist_jet.push_back(HIST_PTHAT);
@@ -92,9 +92,9 @@ void LTANA::Hist::init()
 //   hist_jet.push_back(HIST_J1_PTAWAY);
 //   hist_jet.push_back(HIST_J1_ETAAWAY);
 /*   hist_jet.push_back(HIST_PTHAT);
-   hist_jet.push_back(HIST_NPV);
+   hist_jet.push_back(HIST_NPV);*/
    hist_jet.push_back(HIST_J1_CSVIVF);
-   hist_jet.push_back(HIST_J1_MUPTREL);
+/*   hist_jet.push_back(HIST_J1_MUPTREL);
    hist_jet.push_back(HIST_J1_NTRKGEN);
    hist_jet.push_back(HIST_J1_AWAYDR);
  */
@@ -122,6 +122,7 @@ void LTANA::Hist::init()
      }   
    
    sel.push_back("nosel");
+   
 /*   sel.push_back("pt20t30");
    sel.push_back("pt30t40");
    sel.push_back("pt40t50");
@@ -138,6 +139,7 @@ void LTANA::Hist::init()
    sel.push_back("pt400t500");
    sel.push_back("pt500t670");
    sel.push_back("pt670t1000");*/
+
    sel.push_back("pt20t30");
    sel.push_back("pt30t50");
    sel.push_back("pt50t70");
@@ -147,6 +149,7 @@ void LTANA::Hist::init()
    sel.push_back("pt200t300");
    sel.push_back("pt300t670");
    sel.push_back("pt670t1000");
+
    sel_n = sel.size();
 
 /*   jPtMin.push_back(20); jPtMax.push_back(30);
@@ -232,7 +235,7 @@ void LTANA::Hist::init()
    
    // systematics to include
    sys.push_back(SYS_NONE);
-   sys.push_back(SYS_PU_UP);
+/*   sys.push_back(SYS_PU_UP);
    sys.push_back(SYS_PU_DOWN);
    sys.push_back(SYS_GSPLIT_UP);
    sys.push_back(SYS_GSPLIT_DOWN);
@@ -249,7 +252,7 @@ void LTANA::Hist::init()
    sys.push_back(SYS_JES_UP);
    sys.push_back(SYS_JES_DOWN);
    sys.push_back(SYS_JER_UP);
-   sys.push_back(SYS_JER_DOWN);
+   sys.push_back(SYS_JER_DOWN);*/
 
    sys_n = sys.size();
   
@@ -403,6 +406,18 @@ void LTANA::Hist::init()
 	rw->init(doRW,jPtMin,jPtMax,sel,selbName,name_rw,name_rw_2d);
      }   
 
+//   if( !isdata )
+//     {
+//	pu = new LTANA::PU();
+//	pu->init(doPU);
+//     }   
+
+   if( isdata )
+     {
+	ps = new LTANA::PS();
+	ps->init(doPS);
+     }   
+   
    for(int j=0;j<flav_n;j++)
      {	
 	for(int ss=0;ss<sel_n;ss++)
@@ -454,9 +469,10 @@ void LTANA::Hist::fill()
    float mc_weight = ntP->mcweight;
    if( !isdata ) w *= mc_weight;
    
-   int npu = ntP->nPU;
+//   int npu = ntP->nPU;
+   int npu = ntP->nPUtrue+1;
    int npv = ntP->nPV;
-   if( npu > 34 ) npu = 34;
+//   if( npu > 34 ) npu = 34;
 
 //   int jmax = 0; // highest-Pt jet
    int jmax = -1; // all jets
@@ -501,6 +517,7 @@ void LTANA::Hist::fill()
    bool passTrigJet40 = passTrig(41);
    bool passTrigJet70 = passTrig(44);
    bool passTrigJet110 = passTrig(47);
+//   bool passTrigJet170 = passTrig(90);
    bool passTrigJet300 = passTrig(50);
    
    bool passTrigPFJet40 = passTrig(2);
@@ -510,9 +527,55 @@ void LTANA::Hist::fill()
    bool passTrigPFJet200 = passTrig(15);
    bool passTrigPFJet260 = passTrig(17);
    bool passTrigPFJet320 = passTrig(19);
+
+//   if( !isdata )
+//     {
+//	passTrigJet20 = 1;
+//	passTrigJet40 = 1;
+//	passTrigJet70 = 1;
+//	passTrigJet110 = 1;
+//	passTrigJet300 = 1;
+//     }   
    
    int bitIdx;
    int trigIdx;
+   
+   int runIdx = ntP->Run;
+
+   const int runN1 = 59;
+   int runIdx1[runN1] = {273158,273302,273402,273403,273404,273405,273406,273408,273409,273410,273411,273425,273446,273447,273448,273449,273450,273492,273493,273494,273502,273503,273554,273555,273725,273728,273730,274094,274146,274159,274160,274161,274172,274198,274199,274200,274241,274244,274251,274283,274317,274319,274337,274339,274344,274345,274954,274955,274970,274971,275000,275001,275074,275290,275310,275311,275376,275837,275847};
+   const int runN2 = 31;
+   int runIdx2[runN2] = {274240,274250,274284,274286,274316,274335,274336,274338,274382,274388,274422,274441,274442,274969,274999,275073,275125,275291,275292,275293,275309,275338,275375,275778,275782,275836,275918,275920,275921,275923,275931};
+   const int runN3 = 43;
+   int runIdx3[runN3] = {274314,274315,274387,274420,274421,274440,274968,274998,275059,275066,275067,275124,275282,275283,275284,275319,275337,275344,275345,275370,275371,275657,275658,275659,275761,275767,275772,275773,275774,275776,275777,275832,275833,275834,275835,275886,275890,275911,275912,275913,275963,276092,276097};
+
+   // TIME
+/*   const int runN1 = 63;
+   int runIdx1[runN1] = {273158,273302,273402,273403,273404,273405,273406,273408,273409,273410,273411,273425,273446,273447,273448,273449,273450,273492,273493,273494,273502,273503,273554,273555,273725,273728,273730,274094,274146,274159,274160,274161,274172,274198,274199,274200,274240,274241,274244,274250,274251,274283,274284,274286,274314,274315,274316,274317,274319,274335,274336,274337,274338,274339,274344,274345,274382,274387,274388,274420,274421,274422,274440};
+   const int runN2 = 34;
+   int runIdx2[runN2] = {274441,274442,274954,274955,274968,274969,274970,274971,274998,274999,275000,275001,275059,275066,275067,275068,275073,275074,275124,275125,275282,275283,275284,275290,275291,275292,275293,275309,275310,275311,275319,275337,275338,275344};
+   const int runN3 = 37;
+   int runIdx3[runN3] = {275345,275370,275371,275375,275376,275657,275658,275659,275761,275767,275772,275773,275774,275776,275777,275778,275782,275832,275833,275834,275835,275836,275837,275847,275886,275890,275911,275912,275913,275918,275920,275921,275923,275931,275963,276092,276097};
+*/   
+   bool is1 = 0;
+   bool is2 = 0;
+   bool is3 = 0;
+   
+   for(int i=0;i<runN1;i++)
+     {
+	if( runIdx == runIdx1[i] ) {is1 = 1; break;}
+     }   
+   for(int i=0;i<runN2;i++)
+     {
+	if( runIdx == runIdx2[i] ) {is2 = 1; break;}
+     }   
+   for(int i=0;i<runN3;i++)
+     {
+	if( runIdx == runIdx3[i] ) {is3 = 1; break;}
+     }   
+   
+//   if( isdata && !is3 ) return;
+//   if( isdata && !(runIdx < 276098) ) return;
 
 /*   if( ntP->Evt == 401543665 && ntP->Run == 251643 )
      {
@@ -569,10 +632,10 @@ void LTANA::Hist::fill()
      }*/
 
    int njet20 = 0, njet40 = 0, njet70 = 0,
-     njet110 = 0, njet300 = 0;
+     njet110 = 0, njet170 = 0, njet300 = 0;
 
    int nMuJet20 = 0, nMuJet40 = 0, nMuJet70 = 0,
-     nMuJet110 = 0, nMuJet300 = 0;
+     nMuJet110 = 0, nMuJet170 = 0, nMuJet300 = 0;
    
    int njetPF40 = 0, njetPF60 = 0, njetPF80 = 0,
      njetPF140 = 0, njetPF200 = 0,
@@ -619,14 +682,16 @@ void LTANA::Hist::fill()
 	       }
 	  }
 
-	if( jpt > 30. )  njet20++;
-	if( jpt > 30 && nMuJet ) nMuJet20++;
-	if( jpt > 50. )  njet40++;
-	if( jpt > 50 && nMuJet ) nMuJet40++;
-	if( jpt > 80. )  njet70++;
-	if( jpt > 80 && nMuJet ) nMuJet70++;
-	if( jpt > 120. ) njet110++;
-	if( jpt > 120 && nMuJet ) nMuJet110++;
+	if( jpt > 30. && jpt < 50. )  njet20++;
+	if( jpt > 30 && jpt < 50. && nMuJet ) nMuJet20++;
+	if( jpt > 50. && jpt < 80. )  njet40++;
+	if( jpt > 50 && jpt < 80. && nMuJet ) nMuJet40++;
+	if( jpt > 80. && jpt < 120. )  njet70++;
+	if( jpt > 80 && jpt < 120. && nMuJet ) nMuJet70++;
+	if( jpt > 120. && jpt < 320. ) njet110++;
+	if( jpt > 120 && jpt < 320. && nMuJet ) nMuJet110++;
+//	if( jpt > 180. ) njet170++;
+//	if( jpt > 180 && nMuJet ) nMuJet170++;
 	if( jpt > 320. ) njet300++;
 	if( jpt > 320. && nMuJet ) nMuJet300++;
 	
@@ -642,8 +707,25 @@ void LTANA::Hist::fill()
    if( njet40 < 2 || nMuJet40 < 1 ) passTrigJet40 = false;
    if( njet70 < 2 || nMuJet70 < 1 ) passTrigJet70 = false;
    if( njet110 < 2 || nMuJet110 < 1 ) passTrigJet110 = false;
+//   if( njet170 < 2 || nMuJet170 < 1 ) passTrigJet170 = false;
    if( njet300 == 0 || nMuJet300 < 1 ) passTrigJet300 = false;
 
+   double psw = 1.;
+   if( isdata )
+     {	
+	if( passTrigJet300 ) psw = ps->getPSWeight("BTagMu_Jet300_Mu5",ntP->Run,ntP->LumiBlock);
+	else if( passTrigJet110 ) psw = ps->getPSWeight("BTagMu_DiJet110_Mu5",ntP->Run,ntP->LumiBlock);
+	else if( passTrigJet70 ) psw = ps->getPSWeight("BTagMu_DiJet70_Mu5",ntP->Run,ntP->LumiBlock);
+	else if( passTrigJet40 ) psw = ps->getPSWeight("BTagMu_DiJet40_Mu5",ntP->Run,ntP->LumiBlock);
+	else if( passTrigJet20 ) psw = ps->getPSWeight("BTagMu_DiJet20_Mu5",ntP->Run,ntP->LumiBlock);
+	
+//	std::cout << passTrigJet20 << " " << passTrigJet40 << " " << passTrigJet70 << " " << passTrigJet110 << " " << passTrigJet300 << std::endl;
+//	std::cout << psw << " " << ntP->Run << " " << ntP->LumiBlock << std::endl;
+	
+//	if( passTrigJet170 ) psw = ps->getPSWeight("BTagMu_DiJet170_Mu5",ntP->Run,ntP->LumiBlock);
+     }
+   w *= psw;
+   
    if( njetPF40 == 0 ) passTrigPFJet40 = false;
    if( njetPF60 == 0 ) passTrigPFJet60 = false;
    if( njetPF80 == 0 ) passTrigPFJet80 = false;
@@ -653,11 +735,12 @@ void LTANA::Hist::fill()
    if( njetPF320 == 0 ) passTrigPFJet320 = false;
    
    if( sample == 0 )
-     {	
+     {
 	if( !passTrigJet20 &&
 	    !passTrigJet40 &&
 	    !passTrigJet70 &&
 	    !passTrigJet110 &&
+//	    !passTrigJet170 &&
 	    !passTrigJet300 ) return;
      }
    else
@@ -668,15 +751,19 @@ void LTANA::Hist::fill()
 	    !passTrigPFJet140 &&
 	    !passTrigPFJet200 &&
 	    !passTrigPFJet260 &&
-	    !passTrigPFJet320 ) return;	
+	    !passTrigPFJet320 ) return;
      }
    
    // Loop on jets
    
    int nJetMax = (jmax >= 0 && ntNJET >= jmax) ? jmax+1 : ntNJET;
-
+   
+   bool foundHighestJet = 0;
+   
    for(int ij=0;ij<nJetMax;ij++)
      {
+//	if( foundHighestJet == 1 ) break; //FIXME
+	
 	if( ij != jidx && jidx >= 0 ) continue;
 
 	if( ntP->Jet_Proba[ij] == 0 ) continue;
@@ -784,7 +871,7 @@ void LTANA::Hist::fill()
 
 	float jpt = ntP->Jet_pt[ij];
 	
-	if( jpt < 20. || jpt > 1500. ) passSel = false;
+	if( jpt < 20. ) passSel = false;
 	if( fabs(jeta) > 2.4 ) passSel = false;
 	
 	int njet = ntNJET;
@@ -816,26 +903,30 @@ void LTANA::Hist::fill()
 	  }
 	bool passMuonInJet = (muidx.size() > 0);
 
-	// this jet
-/*	hasMuon = 0;
+	// cMVAv2 FIXME
+/*	bool hasMuon = 0;
+	bool otherJetHasMuon = 0;
 	for(int imu=0;imu<ntP->nPFMuon;imu++)
 	  {
+	     if( ntP->PFMuon_isGlobal[imu] == 0 ) continue;
+	     if( ntP->PFMuon_pt[imu] < muptcut ) continue;
+	     if( ntP->PFMuon_nMuHit[imu] == 0 ) continue;
+	     if( ntP->PFMuon_nTkHit[imu] < 11 ) continue;
+	     if( ntP->PFMuon_nPixHit[imu] < 2 ) continue;
+	     if( ntP->PFMuon_nOutHit[imu] > 2 ) continue;
+	     if( ntP->PFMuon_nMatched[imu] < 2 ) continue;
+	     if( ntP->PFMuon_chi2[imu] > 10. ) continue;
+	     if( ntP->PFMuon_chi2Tk[imu] > 10. ) continue;
+	     if( fabs(ntP->PFMuon_eta[imu]) > 2.4 ) continue;
+	     
 	     if( ntP->PFMuon_IdxJet[imu] == ij )
-	       {	     
-		  if( ntP->PFMuon_isGlobal[imu] == 0 ) continue;
-		  if( ntP->PFMuon_pt[imu] < muptcut ) continue;
-		  if( ntP->PFMuon_nMuHit[imu] == 0 ) continue;
-		  if( ntP->PFMuon_nTkHit[imu] < 11 ) continue;
-		  if( ntP->PFMuon_nPixHit[imu] < 2 ) continue;
-		  if( ntP->PFMuon_nOutHit[imu] > 2 ) continue;
-		  if( ntP->PFMuon_nMatched[imu] < 2 ) continue;
-		  if( ntP->PFMuon_chi2[imu] > 10. ) continue;
-		  if( ntP->PFMuon_chi2Tk[imu] > 10. ) continue;
-		  if( fabs(ntP->PFMuon_eta[imu]) > 2.4 ) continue;
+	       {		  
 		  hasMuon = 1;
 	       }
+	     else otherJetHasMuon = 1;
 	  }*/
-	
+	//
+
 	float drjmu = -666;
 	if( passMuonInJet )
 	  {
@@ -862,13 +953,16 @@ void LTANA::Hist::fill()
 		  if( drjmu < 0.4 ) break;
 	       }	     
 	  }	
-	
+
+//	if( !(otherJetHasMuon && !hasMuon) ) passSel = false;
 	if( drjmu > 0.4 || drjmu < 0 ) passSel = false;
 	
 	// END SELECTION
 	
 	if( passSel )
 	  {
+//	     foundHighestJet = 1; //FIXME
+	     
 	     float jbtCombSvx = ntP->Jet_CombSvx[ij];
 	     float jbtCombIVF = ntP->Jet_CombIVF[ij];
 	     float jbtTCHP = ntP->Jet_Ip3P[ij];
@@ -911,7 +1005,7 @@ void LTANA::Hist::fill()
 		  float sfj = w;
 		  
 		  // l-jets are underestimated in MC by 1.27
-		  if( flavchI == 3 && !isdata ) sfj *= 1.27; // mind this factor
+//		  if( flavchI == 3 && !isdata ) sfj *= 1.27; // mind this factor
 		  
 		  // additional scaling to study the effect on SF
 //		  if( flavchI == 1 ) sfj *= 0.80;
@@ -923,6 +1017,7 @@ void LTANA::Hist::fill()
 		  
 		  // pileup reweighting sys
 		  sfj *= syst->Pileup(npv,sys[isys],_h_pileup);
+////		  sfj *= syst->Pileup(npu,sys[isys],_h_pileup);
 //		  sfj *= syst->Pileup(npu,sys[isys]);
 
 		  // gluon splitting sys
@@ -1026,11 +1121,11 @@ void LTANA::Hist::fill()
 			      }
 			 }		       
 		    }
-		  
+
 		  int nHISTSEL = histNAMESSEL.size();
 		  for(int ih=0;ih<nHISTSEL;ih++)
-		    {		       
-		       TH1D *h = _m1d_Jet->find(histNAMESSEL.at(ih))->second;
+		    {		
+		       TH1D *h = _m1d_Jet->find(histNAMESSEL.at(ih))->second;		       
 
 		       int hidx = int(ih/4);
 		       fillThis = true;
@@ -1061,7 +1156,7 @@ void LTANA::Hist::fill()
 				 for(int iv=0;iv<varvs;iv++)
 				   {
 				      h->Fill(varv[iv],sfc);
-				   }				 
+				   }		
 			      }			    
 			 }		       
 		    }
@@ -1128,8 +1223,8 @@ void LTANA::Hist::fill()
 		    }
 		  
 		  histNAMESSEL_2d.clear();
-	       }	     
-	  }	
+	       }
+	  }
 	
 	syst->clear();
 	

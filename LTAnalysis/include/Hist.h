@@ -131,9 +131,13 @@ namespace LTANA
       private:
 
 	// [FLAVOUR][PT][ETA][BTAG][ADDSEL][VAR][2*(NSYS-1)+1]
-	std::string histNAMES[5][15][1][20][1][10][25];
-	std::string histNAMES_2d[5][15][1][20][1][10][25];
-	std::string histNAMES_3d[5][15][1][20][1][10][25];
+/*	std::string histNAMES[5][15][1][20][1][1][50];
+	std::string histNAMES_2d[5][15][1][20][1][1][50];
+	std::string histNAMES_3d[5][15][1][20][1][1][50];*/
+
+	std::string histNAMES[5][15][1][20][1][15][5];
+	std::string histNAMES_2d[5][15][1][20][1][15][5];
+	std::string histNAMES_3d[5][15][1][20][1][15][5];
 
 	TLorentzVector *v_mu;
 	TLorentzVector *v_jet;
@@ -159,6 +163,7 @@ namespace LTANA
 	
 	Syst *syst;
 	Reweight *rw;
+	PS *ps;
 	
 	std::string sysName[1000];
 	

@@ -1,9 +1,9 @@
 #!/bin/env zsh
 
-cp /tmp/x509up_u7989 /home-pbs/kskovpen/proxy/.
+cp /tmp/x509up_u20657 /user/kskovpen/proxy/.
 
-#tool="Hist"
-tool="HistBoost"
+tool="Hist"
+#tool="HistBoost"
 #tool="Trigger"
 
 jName=${1}
@@ -14,16 +14,18 @@ fi
 
 nmax=-1
 doRW=0
+doPU=0
+doPS=1
 samptype=0 #0-mu,1-incl
 
-#que="sbg_local"
-que="cms_local"
+que="localgrid"
 
 export HOME=$(pwd)
 
-dout="/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/LTAnalysis/test/"
+dout="/user/kskovpen/analysis/bTag/CMSSW_8_0_12/src/LTAnalysis/test/"
 
 fpath="${HOME}/lists/"
+#fpath="${HOME}/listsIncl/"
 ###fpath="${HOME}/listsTEST/"
 if [[ ${samptype} == 1 ]]; then
   fpath="${HOME}/listsIncl/"
@@ -37,7 +39,8 @@ mkdir ${runName}
 rm -rf ${logName}
 mkdir ${logName}
 
-fxsec="xsec/table.txt"
+fxsec="xsec/tableJPMCv1.txt"
+#fxsec="xsec/tableIncl.txt"
 ###fxsec="xsec/tableLocal.txt"
 if [[ ${samptype} == 1 ]]; then
   fxsec="xsec/tableIncl.txt"
@@ -82,9 +85,10 @@ do
   fout=$(echo ${runName}/${dataset}/${line}_${jidx} | sed 's%.txt%%g')
   lout=$(echo ${line}_${jidx} | sed 's%.txt%%g')
 
-  echo "${dataset}: $noe $xsec $eff isdata=$isdata" 
+  echo "${dataset}: $noe $xsec $eff isdata=$isdata"
   qsub -N LTAnalysis -q ${que} -o ${logName}/${sample}.log -j oe job.sh \
+-l walltime=03:00:00 \
 -v dout=${dout},line2=${fpath}${line},fout=${fout},isdata=${isdata},\
 noe=${noe},xsec=${xsec},eff=${eff},nmax=${nmax},\
-doRW=${doRW},tool=${tool},samptype=${samptype}
+doRW=${doRW},tool=${tool},samptype=${samptype},doPU=${doPU},doPS=${doPS}
 done

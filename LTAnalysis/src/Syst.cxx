@@ -45,17 +45,17 @@ void LTANA::Syst::init(std::string jtype)
    std::cout << tool << " analysis" << std::endl;
    if( strcmp(tool,"Hist") == 0 ) 
      {
-	jesTotal = new JetCorrectionUncertainty(*(new JetCorrectorParameters("/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/LTAnalysis/test/Summer15_25nsV6_MC/Summer15_25nsV6_MC_UncertaintySources_AK4PFchs.txt", "Total")));
+	jesTotal = new JetCorrectionUncertainty(*(new JetCorrectorParameters("/user/kskovpen/analysis/bTag/CMSSW_8_0_12/src/LTAnalysis/test/Spring16_25nsV6_MC/Spring16_25nsV6_MC_Uncertainty_AK4PFchs.txt")));
      }   
    else if( strcmp(tool,"HistBoost") == 0 ) 
      {
 	if( strcmp(jtype.c_str(),"sub") == 0 )
 	  {
-	     jesTotal = new JetCorrectionUncertainty(*(new JetCorrectorParameters("/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/LTAnalysis/test/Summer15_25nsV6_MC/Summer15_25nsV6_MC_UncertaintySources_AK4PFchs.txt", "Total")));
+	     jesTotal = new JetCorrectionUncertainty(*(new JetCorrectorParameters("/user/kskovpen/analysis/bTag/CMSSW_8_0_12/src/LTAnalysis/test/Spring16_25nsV6_MC/Spring16_25nsV6_MC_Uncertainty_AK4PFchs.txt")));
 	  }
 	else
 	  {	     
-	     jesTotal = new JetCorrectionUncertainty(*(new JetCorrectorParameters("/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/LTAnalysis/test/Summer15_25nsV6_MC/Summer15_25nsV6_MC_UncertaintySources_AK8PFchs.txt", "Total")));
+	     jesTotal = new JetCorrectionUncertainty(*(new JetCorrectorParameters("/user/kskovpen/analysis/bTag/CMSSW_8_0_12/src/LTAnalysis/test/Spring16_25nsV6_MC/Spring16_25nsV6_MC_Uncertainty_AK8PFchs.txt")));
 	  }	
      }   
    else
@@ -102,7 +102,7 @@ void LTANA::Syst::init(std::string jtype)
 	       }
 	     
 	     std::ifstream MnusCorrectionsFile;
-	     MnusCorrectionsFile.open("/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/LTAnalysis/test/PtRelFall12/EnergyFraction_" + PtRelPtBin[ptb] + "_m5.txt");
+	     MnusCorrectionsFile.open("/user/kskovpen/analysis/bTag/CMSSW_8_0_12/src/LTAnalysis/test/PtRelFall12/EnergyFraction_" + PtRelPtBin[ptb] + "_m5.txt");
 	     while( MnusCorrectionsFile )
 	       {
 		  float xBin, efcorr;
@@ -113,7 +113,7 @@ void LTANA::Syst::init(std::string jtype)
 	       }
 	     
 	     std::ifstream PlusCorrectionsFile; 
-	     PlusCorrectionsFile.open("/home-pbs/kskovpen/bTagRun2/CMSSW_7_4_6_patch6/src/LTAnalysis/test/PtRelFall12/EnergyFraction_" + PtRelPtBin[ptb] + "_p5.txt");
+	     PlusCorrectionsFile.open("/user/kskovpen/analysis/bTag/CMSSW_8_0_12/src/LTAnalysis/test/PtRelFall12/EnergyFraction_" + PtRelPtBin[ptb] + "_p5.txt");
 	     while( PlusCorrectionsFile )
 	       {
 		  float xBin, efcorr;
@@ -258,6 +258,20 @@ float LTANA::Syst::Pileup(int npu,int isys,TH1D *h_pu)
 //	else if( isDown ) wPU = WeightPUmin[npu];
 //     }   
    
+/*   if( !isdata )
+     {
+	float wPU = pu->getPUWeight(npu);
+	bool isUp = (isys == SYS_PU_UP);
+	bool isDown = (isys == SYS_PU_DOWN);
+	if( isUp || isDown )
+	  {	
+	     if( isUp ) wPU = pu->getPUWeight(npu,"up");
+	     else if( isDown ) wPU = pu->getPUWeight(npu,"down");
+	  }
+	
+	sf = wPU;
+     }*/
+   
    if( !isdata )
      {	
 	int nb = h_pu->GetXaxis()->GetNbins();
@@ -309,13 +323,14 @@ float LTANA::Syst::GluonSplitting(int ij,int flavch,int isys,std::string jtype)
 		  jphi = ntPSub->FatJetInfo_Jet_phi[ij];
 	       }	     
 	  }   
+
+	// pre-ICHEP
 	
-	if( flavch == 2 )
+/*	if( flavch == 2 )
 	  {	     
 	     for( int k=0;k<ntP->ncQuarks;k++ )
 	       {
 		  if( ! ntP->cQuark_fromGSP[k] ) continue;
-//		  if( ntP->cQuark_status[k] < 71 || ntP->cQuark_status[k] > 73 ) continue;
 		  double dRqj = helper->DeltaR(jeta,
 					       jphi,
 					       ntP->cQuark_eta[k], 
@@ -325,7 +340,6 @@ float LTANA::Syst::GluonSplitting(int ij,int flavch,int isys,std::string jtype)
 		  for( int l=k+1;l<ntP->ncQuarks;l++ )
 		    {
 		       if( ! ntP->cQuark_fromGSP[l] ) continue;
-//		       if( ntP->cQuark_status[l] < 71 || ntP->cQuark_status[l] > 73 ) continue;
 		       double dRqj2 = helper->DeltaR(jeta,
 						     jphi,
 						     ntP->cQuark_eta[l], 
@@ -341,7 +355,6 @@ float LTANA::Syst::GluonSplitting(int ij,int flavch,int isys,std::string jtype)
 	     for( int k=0;k<ntP->nbQuarks;k++ )
 	       {
 		  if( ! ntP->bQuark_fromGSP[k] ) continue;
-//		  if( ntP->bQuark_status[k] < 71 || ntP->bQuark_status[k] > 79 ) continue;
 		  double dRqj = helper->DeltaR(jeta,
 					       jphi,
 					       ntP->bQuark_eta[k], 
@@ -351,7 +364,6 @@ float LTANA::Syst::GluonSplitting(int ij,int flavch,int isys,std::string jtype)
 		  for( int l=k+1;l<ntP->nbQuarks;l++ )
 		    {
 		       if( ! ntP->bQuark_fromGSP[l] ) continue;
-//		       if( ntP->bQuark_status[l] < 71 || ntP->bQuark_status[l] > 79 ) continue;
 		       double dRqj2 = helper->DeltaR(jeta, 
 						     jphi,
 						     ntP->bQuark_eta[l], 
@@ -360,18 +372,47 @@ float LTANA::Syst::GluonSplitting(int ij,int flavch,int isys,std::string jtype)
 		       if( dRqj2 < drMin ) GSPb = true;
 		    }			    
 	       }		       
-	  }		  
+	  }*/
+
+	// post-ICHEP	
+	if( flavch == 2 )
+	  {	     
+	     int ndHadronsFound = 0;
+	     for( int k=0;k<ntP->nDHadrons;k++ )
+	       {
+		  double dRqj = helper->DeltaR(jeta,
+					       jphi,
+					       ntP->DHadron_eta[k],
+					       ntP->DHadron_phi[k]);
+		  if( dRqj < 0.4 ) ndHadronsFound++;
+	       }
+	     
+	     if( ndHadronsFound >= 2 ) GSPc = 1;
+	  }
 	
+	if( flavch == 1 )
+	  {
+	     int nbHadronsFound = 0;
+	     for( int k=0;k<ntP->nBHadrons;k++ )
+	       {
+		  double dRqj = helper->DeltaR(jeta,
+					       jphi,
+					       ntP->BHadron_eta[k],
+					       ntP->BHadron_phi[k]);
+		  if( dRqj < 0.4 ) nbHadronsFound++;
+	       }
+	     
+	     if( nbHadronsFound >= 2 ) GSPb = 1;
+	  }
+		
 	if( 
 	   isys == SYS_GSPLIT_DOWN &&
 	   ((GSPc && flavch == 2) || (GSPb && flavch == 1))
-//	  ) sf *= 0.75;
-	  ) sf *= 0.5;	
+	  ) sf *= 0.75;	
 	if( 
 	   isys == SYS_GSPLIT_UP &&
 	   ((GSPc && flavch == 2) || (GSPb && flavch == 1))
-//	  ) sf *= 1.25;
-	  ) sf *= 1.5;   
+	  ) sf *= 1.25;   
      }
    
    return sf;

@@ -15,6 +15,8 @@
 #include "TreeSub.h"
 #include "Syst.h"
 #include "Reweight.h"
+#include "PU.h"
+#include "PS.h"
 
 #include <vector>
 #include <map>
@@ -32,8 +34,11 @@ extern float xsec;
 extern float eff;
 extern int nmax;
 extern int doRW;
+extern int doPU;
+extern int doPS;
 extern char* tool;
 extern int sample;
+extern LTANA::PU *pu;
 
 extern TChain *tr;
 extern TChain *trSub;

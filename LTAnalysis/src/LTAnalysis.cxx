@@ -10,19 +10,22 @@ float xsec;
 float eff;
 int nmax;
 int doRW;
+int doPU;
+int doPS;
 TChain *tr;
 TChain *trSub;
 char *tool;
 int sample;
+LTANA::PU *pu;
 
 LTANA::Tree *ntP;
 LTANA::TreeSub *ntPSub;
 
 int main(int argc, char *argv[])
 {
-   if( argc < 11 )
+   if( argc < 13 )
      {
-	std::cout << "Usage: ./sysAna [input file list] [output name] [isdata] [noe] [xsec] [eff] [nmax] [doRW] [tool] [sample]" << std::endl;
+	std::cout << "Usage: ./sysAna [input file list] [output name] [isdata] [noe] [xsec] [eff] [nmax] [doRW] [tool] [sample] [doPU] [doPS]" << std::endl;
 	exit(1);
      }
    
@@ -36,6 +39,8 @@ int main(int argc, char *argv[])
    doRW = atoi(argv[8]);
    tool = argv[9];
    sample = atoi(argv[10]);
+   doPU = atoi(argv[11]);
+   doPS = atoi(argv[12]);
 
    std::cout << "Input file list: " << fin <<
      std::endl;

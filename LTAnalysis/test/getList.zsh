@@ -1,72 +1,112 @@
 #!/bin/env zsh
 
-#fpathMC="/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_7414/"
-#fpathDATA="/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_7414/"
-fpathMC="/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_763/"
-fpathDATA="/opt/sbg/scratch1/cms/kskovpen/bTag/NTUPLES/13TeV_763/"
+fpathMC="srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/kskovpen/BTV/ICHEPJPMCv1/"
+fpathMCR=$(echo ${fpathMC} | sed 's%8443/pnfs%8443//pnfs%g')
+fpathDATA="srm://maite.iihe.ac.be:8443/pnfs/iihe/cms/store/user/kskovpen/BTV/ICHEPJPDATAv1/"
+fpathDATAR=$(echo ${fpathDATA} | sed 's%8443/pnfs%8443//pnfs%g')
 
-fpathMC="${fpathMC}QCD_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8_RunIIFall15MiniAODv1-PU25nsData2015v1_76X_mcRun2_asymptotic_v12/"
-###fpathMC="${fpathMC}QCD_TuneCUETP8M1_13TeV_pythia8_RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12/"
+dataStr="BTagMu"
 
-liDATA=($(ls ${fpathDATA} | egrep -v "QCD"))
-liMC=($(ls ${fpathMC}))
+liDATA=($(gfal-ls ${fpathDATA} | egrep -e "$dataStr"))
+liMC=($(gfal-ls ${fpathMC} | egrep -v "$dataStr" | egrep -v "JetHT" | grep "MuEnriched"))
 
-nFilesDATA=35 # per job
-###nFilesDATA=5 # per job
-#nFilesDATA=10000
-#nFilesMC=10000
-nFilesMC=30
-###nFilesMC=5
-#outDir="listsSTAT/"
-#outDir="lists/"
-#outDir="listsIncl/"
-outDir="listsTEST/"
+nFilesDATA=25 # per job
+nFilesMC=20
+outDir="lists/"
 
 rm -rf ${outDir}
 mkdir ${outDir}
 
-# data
+# DATA
+
 rm -f /tmp/tempDATA.txt
 for line in $liDATA
 do
-d1=$(echo $line)
-liDATA2=$(ls ${fpathDATA}${d1})
-echo $liDATA2 | while read line2
-do
-f1=$(echo $line2)
-file=$(echo ${fpathDATA}${d1}/${f1})
-echo "${file}" >> /tmp/tempDATA.txt
-done
-split -a 5 -l ${nFilesDATA} -d /tmp/tempDATA.txt /tmp/${d1}_
-lsfi=$(ls /tmp/${d1}_*)
-jid=0
-echo $lsfi | while read fil
-do
-mv ${fil} ${outDir}/${d1}_ID${jid}.txt
-jid=$[$jid+1]
-done
-rm -f /tmp/tempDATA.txt
+  echo $line
+  d1=$(echo $line)
+  liDATA2=$(gfal-ls ${fpathDATA}${d1})
+  d2=($(echo $liDATA2))
+  for id2 in $d2
+  do
+    liDATA3=$(gfal-ls ${fpathDATA}${d1}/${id2})
+    d3=$(echo $liDATA3)
+    liDATA4=($(gfal-ls ${fpathDATA}${d1}/${id2}/${d3}))
+    for d4 in $liDATA4
+    do
+      liDATA5=($(gfal-ls ${fpathDATA}${d1}/${id2}/${d3}/${d4}))
+      for line2 in $liDATA5
+      do
+        f1=$(echo $line2)
+        file=$(echo ${fpathDATAR}${d1}/${id2}/${d3}/${d4}/${f1})
+	isFailed=$(echo $file | grep failed)
+	if [[ ${isFailed} == "" ]]; then
+	  echo "${file}" >> /tmp/tempDATA.txt
+	fi
+      done
+    done
+    split -a 5 -l ${nFilesDATA} -d /tmp/tempDATA.txt /tmp/${d1}_
+    lsfi=($(ls /tmp/${d1}_*))
+    jid=0
+    for fil in $lsfi
+    do
+      sampStrip=$(echo $id2 | sed "s%_JPMCv1%%g" | sed "s%_JPMCv2%%g" | sed "s%_JPDATAv1%%g" | sed "s%_JPDATAv2%%g")
+      if [[ $#d2 != 1 ]]; then
+        mv ${fil} ${outDir}${d1}_${sampStrip}_ID${jid}.txt
+      else
+        mv ${fil} ${outDir}${d1}_ID${jid}.txt
+      fi
+      jid=$[$jid+1]
+    done
+    rm -f /tmp/tempDATA.txt
+  done
 done
 
 # MC
+
 rm -f /tmp/tempMC.txt
 for line in $liMC
 do
-d1=$(echo $line)
-liMC2=$(ls ${fpathMC}${d1})
-echo $liMC2 | while read line2
-do
-f1=$(echo $line2)
-file=$(echo ${fpathMC}${d1}/${f1})
-echo "${file}" >> /tmp/tempMC.txt
+  echo $line
+  d1=$(echo $line)
+  liMC2=$(gfal-ls ${fpathMC}${d1})
+  d2=($(echo $liMC2))
+  for id2 in $d2
+  do
+    liMC3=$(gfal-ls ${fpathMC}${d1}/${id2})
+    d3=$(echo $liMC3)
+    liMC4=($(gfal-ls ${fpathMC}${d1}/${id2}/${d3}))
+    for d4 in $liMC4
+    do
+      liMC5=($(gfal-ls ${fpathMC}${d1}/${id2}/${d3}/${d4}))
+      for line2 in $liMC5
+      do
+        f1=$(echo $line2)
+        file=$(echo ${fpathMCR}${d1}/${id2}/${d3}/${d4}/${f1})
+	isFailed=$(echo $file | grep failed)
+	if [[ ${isFailed} == "" ]]; then
+	  echo "${file}" >> /tmp/tempMC.txt
+	fi
+      done
+    done
+    split -a 5 -l ${nFilesMC} -d /tmp/tempMC.txt /tmp/${d1}_
+    lsfi=($(ls /tmp/${d1}_*))
+    jid=0
+    for fil in $lsfi
+    do
+      sampStrip=$(echo $id2 | sed "s%_RunIISpring16MiniAODv2_.*%%g" | sed "s%.*_ext1%ext1%g" | sed "s%_JPMCv1%%g" | sed "s%_JPMCv2%%g" | sed "s%_JPMC%%g" | sed "s%_JPDATAv1%%g" | sed "s%_JPDATAv2%%g" | sed "s%_JPDATA%%g")
+      if [[ $#d2 != 1 ]]; then
+        isExt=$(echo $sampStrip | grep "ext1")
+        if [[ $isExt != "" ]]; then
+          mv ${fil} ${outDir}${d1}_${sampStrip}_ID${jid}.txt
+	else
+	  mv ${fil} ${outDir}${d1}_ID${jid}.txt
+	fi
+      else
+        mv ${fil} ${outDir}${d1}_ID${jid}.txt
+      fi
+      jid=$[$jid+1]
+    done
+    rm -f /tmp/tempMC.txt
+  done
 done
-split -a 5 -l ${nFilesMC} -d /tmp/tempMC.txt /tmp/${d1}_
-lsfi=$(ls /tmp/${d1}_*)
-jid=0
-echo $lsfi | while read fil
-do
-mv ${fil} ${outDir}/${d1}_ID${jid}.txt
-jid=$[$jid+1]
-done
-rm -f /tmp/tempMC.txt
-done
+
